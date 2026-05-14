@@ -3,222 +3,219 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Free Web Games</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-    background: #101822;
-    color: #c7d5e0;
-    font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
+    background:#101822;
+    color:#c7d5e0;
+    font-family:Arial, Helvetica, sans-serif;
+    overflow:hidden;
 }
 
 .topbar {
-    height: 72px;
-    background: linear-gradient(to bottom, #1b2838, #171d25);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 28px;
-    border-bottom: 1px solid #000;
+    height:72px;
+    background:linear-gradient(to bottom,#1b2838,#171d25);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid #000;
 }
 
 .logo {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
+    font-size:2rem;
+    font-weight:bold;
+    color:white;
 }
 
 .back-button {
-    background: #417a9b;
-    border: none;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: none;
-    font-weight: bold;
+    background:#417a9b;
+    border:none;
+    color:white;
+    padding:10px 18px;
+    border-radius:6px;
+    cursor:pointer;
+    display:none;
+    font-weight:bold;
 }
 
 .back-button:hover {
-    background: #4d90b8;
+    background:#4d90b8;
 }
 
 .main {
-    display: flex;
-    height: calc(100vh - 72px);
+    display:flex;
+    height:calc(100vh - 72px);
 }
 
 .sidebar {
-    width: 260px;
-    background: #171a21;
-    padding: 20px;
-    border-right: 1px solid #000;
+    width:260px;
+    background:#171a21;
+    padding:20px;
+    border-right:1px solid #000;
+    overflow-y:auto;
 }
 
 .sidebar h2 {
-    font-size: 0.9rem;
-    color: #66c0f4;
-    margin-bottom: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size:0.9rem;
+    color:#66c0f4;
+    margin-bottom:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
 }
 
 .sidebar a {
-    display: block;
-    color: #c7d5e0;
-    text-decoration: none;
-    padding: 10px 12px;
-    border-radius: 6px;
-    margin-bottom: 4px;
-    transition: 0.15s;
+    display:block;
+    color:#c7d5e0;
+    text-decoration:none;
+    padding:10px 12px;
+    border-radius:6px;
+    margin-bottom:4px;
+    cursor:pointer;
 }
 
-.sidebar a:hover {
-    background: #2a475e;
-    color: white;
+.sidebar a:hover,
+.sidebar a.active {
+    background:#2a475e;
+    color:white;
 }
 
 .content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 30px;
+    flex:1;
+    overflow-y:auto;
+    padding:30px;
 }
 
 .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:24px;
 }
 
 .library-title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
+    font-size:2rem;
+    font-weight:bold;
+    color:white;
 }
 
 .search {
-    background: #316282;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 4px;
-    color: white;
-    width: 280px;
-    outline: none;
+    background:#316282;
+    border:none;
+    padding:10px 14px;
+    border-radius:4px;
+    color:white;
+    width:280px;
+    outline:none;
 }
 
 .search::placeholder {
-    color: #d6e8f3;
+    color:#d6e8f3;
 }
 
 .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-    gap: 22px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(420px,1fr));
+    gap:22px;
 }
 
 .game-card {
-    background: #16202d;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: 0.2s;
-    cursor: pointer;
-    border: 1px solid #00000055;
+    background:#16202d;
+    border-radius:10px;
+    overflow:hidden;
+    transition:0.2s;
+    cursor:pointer;
+    border:1px solid #00000055;
 }
 
 .game-card:hover {
-    transform: translateY(-4px);
-    background: #1d2c3d;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    transform:translateY(-4px);
+    background:#1d2c3d;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
 }
 
 .game-image {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    display: block;
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    display:block;
 }
 
 .game-info {
-    padding: 16px;
+    padding:16px;
 }
 
 .game-title {
-    font-size: 1.3rem;
-    color: white;
-    margin-bottom: 8px;
-    font-weight: bold;
+    font-size:1.3rem;
+    color:white;
+    margin-bottom:8px;
+    font-weight:bold;
 }
 
 .game-desc {
-    font-size: 0.95rem;
-    color: #8f98a0;
-    line-height: 1.4;
-    margin-bottom: 14px;
+    font-size:0.95rem;
+    color:#8f98a0;
+    line-height:1.4;
+    margin-bottom:14px;
 }
 
 .play-button {
-    display: inline-block;
-    background: linear-gradient(to bottom, #75b022, #588a1b);
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
+    display:inline-block;
+    background:linear-gradient(to bottom,#75b022,#588a1b);
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:4px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 .play-button:hover {
-    filter: brightness(1.1);
+    filter:brightness(1.1);
 }
 
 .viewer {
-    position: fixed;
-    inset: 72px 0 0 0;
-    background: #0b1118;
-    display: none;
-    z-index: 999;
+    position:fixed;
+    inset:72px 0 0 0;
+    background:#0b1118;
+    display:none;
+    z-index:999;
 }
 
 .viewer iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: black;
+    width:100%;
+    height:100%;
+    border:none;
+    background:black;
 }
 
 .footer {
-    padding: 30px;
-    text-align: center;
-    color: #6b7a88;
-    font-size: 0.9rem;
+    padding:30px;
+    text-align:center;
+    color:#6b7a88;
+    font-size:0.9rem;
 }
 
 @media (max-width: 900px) {
     .sidebar {
-        display: none;
+        display:none;
     }
 
     .content {
-        padding: 20px;
+        padding:20px;
     }
 
     .header-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
+        flex-direction:column;
+        align-items:stretch;
     }
 
     .search {
-        width: 100%;
+        width:100%;
     }
 }
 </style>
@@ -227,117 +224,27 @@ body {
 <body>
 
 <div class="topbar">
-
-    <div class="logo" id="logoText">
-        Free Web Games
-    </div>
-
-    <button class="back-button" id="homeButton">
-        Back To Library
-    </button>
-
+    <div class="logo" id="logoText">Free Web Games</div>
+    <button class="back-button" id="homeButton">Back To Library</button>
 </div>
 
 <div class="main">
-
     <div class="sidebar">
-
-        <h2>Library</h2>
-
-        <a href="#">All Games</a>
-        <a href="#">Card Games</a>
-        <a href="#">Indie</a>
-        <a href="#">Popular</a>
-
+        <h2>Categories</h2>
+        <a class="cat active" data-cat="all">All Games</a>
+        <div id="catList"></div>
     </div>
 
     <div class="content">
-
         <div class="header-row">
-
-            <div class="library-title">
-                Game Library
-            </div>
-
-            <input
-                type="text"
-                class="search"
-                id="searchBox"
-                placeholder="Search games..."
-            >
-
+            <div class="library-title">Game Library</div>
+            <input class="search" id="searchBox" placeholder="Search games...">
         </div>
 
-        <div class="games-grid" id="gamesGrid">
+        <div class="games-grid" id="gamesGrid"></div>
 
-            <!-- Balatro -->
-            <div class="game-card">
-
-                <img
-                    class="game-image"
-                    src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7a85430784e4d613cdb0547414d8cf16ffa45747/header.jpg"
-                >
-
-                <div class="game-info">
-
-                    <div class="game-title">Balatro</div>
-
-                    <div class="game-desc">
-                        Poker roguelike deckbuilder with powerful synergies and endless runs.
-                    </div>
-
-                    <button
-                        class="play-button"
-                        onclick="openGame(
-                            'https://freewebgames.github.io/balatro/index.html',
-                            'Balatro'
-                        )"
-                    >
-                        Play
-                    </button>
-
-                </div>
-
-            </div>
-
-            <!-- Undertale -->
-            <div class="game-card">
-
-                <img
-                    class="game-image"
-                    src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg"
-                >
-
-                <div class="game-info">
-
-                    <div class="game-title">Undertale</div>
-
-                    <div class="game-desc">
-                        A story-driven RPG where choices matter and combat can be avoided.
-                    </div>
-
-                    <button
-                        class="play-button"
-                        onclick="openGame(
-                            'https://freewebgames.github.io/undertale/index.html',
-                            'Undertale'
-                        )"
-                    >
-                        Play
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="footer">
-            Free Web Games © 2026
-        </div>
-
+        <div class="footer">Free Web Games © 2026</div>
     </div>
-
 </div>
 
 <div class="viewer" id="viewer">
@@ -345,60 +252,144 @@ body {
 </div>
 
 <script>
+let games = [];
+let currentCategory = "all";
+
+const grid = document.getElementById("gamesGrid");
+const catList = document.getElementById("catList");
 const searchBox = document.getElementById("searchBox");
-const cards = document.querySelectorAll(".game-card");
-
 const viewer = document.getElementById("viewer");
-const gameFrame = document.getElementById("gameFrame");
-
-const homeButton = document.getElementById("homeButton");
+const frame = document.getElementById("gameFrame");
 const logoText = document.getElementById("logoText");
+const homeButton = document.getElementById("homeButton");
 
-searchBox.addEventListener("input", () => {
+function parseConfig(text) {
+    const blocks = text.trim().split(/\n\s*\n/).filter(Boolean);
 
+    return blocks.map(block => {
+        const obj = {};
+        block.split("\n").forEach(line => {
+            const idx = line.indexOf("|");
+            if (idx === -1) return;
+            const key = line.slice(0, idx).trim().toLowerCase();
+            const value = line.slice(idx + 1).trim();
+            obj[key] = value;
+        });
+
+        obj.cat = (obj.cat || "")
+            .split(",")
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        return obj;
+    }).filter(g => g.title && g.url);
+}
+
+function uniqueCategoriesFromGames() {
+    return [...new Set(
+        games.flatMap(g => Array.isArray(g.cat) ? g.cat : [])
+    )];
+}
+
+function gameMatchesCategory(game, category) {
+    if (category === "all") return true;
+    return Array.isArray(game.cat) && game.cat.includes(category);
+}
+
+function renderGames() {
     const term = searchBox.value.toLowerCase();
+    grid.innerHTML = "";
 
-    cards.forEach(card => {
+    games.forEach(g => {
+        const title = (g.title || "").toLowerCase();
+        const desc = (g.desc || "").toLowerCase();
 
-        const title = card.querySelector(".game-title")
-            .innerText
-            .toLowerCase();
+        if (!gameMatchesCategory(g, currentCategory)) return;
+        if (term && !title.includes(term) && !desc.includes(term)) return;
 
-        card.style.display =
-            title.includes(term)
-                ? ""
-                : "none";
+        const card = document.createElement("div");
+        card.className = "game-card";
 
+        card.innerHTML = `
+            <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
+            <div class="game-info">
+                <div class="game-title">${g.title || ""}</div>
+                <div class="game-desc">${g.desc || ""}</div>
+                <button class="play-button">Play</button>
+            </div>
+        `;
+
+        card.querySelector("button").onclick = () => openGame(g.url, g.title || "Game");
+        grid.appendChild(card);
     });
+}
 
-});
+function setActiveCategoryButton(category) {
+    document.querySelectorAll(".cat").forEach(x => x.classList.remove("active"));
+    const active = document.querySelector(`.cat[data-cat="${CSS.escape(category)}"]`);
+    if (active) active.classList.add("active");
+}
+
+function buildCategories() {
+    catList.innerHTML = "";
+
+    uniqueCategoriesFromGames().forEach(c => {
+        const a = document.createElement("a");
+        a.textContent = c;
+        a.className = "cat";
+        a.dataset.cat = c;
+        a.onclick = () => {
+            currentCategory = c;
+            setActiveCategoryButton(c);
+            renderGames();
+        };
+        catList.appendChild(a);
+    });
+}
 
 function openGame(url, title) {
-
-    gameFrame.src = url;
-
+    frame.src = url;
     viewer.style.display = "block";
-
     homeButton.style.display = "block";
-
-    logoText.innerText =
-        "Free Web Games | " + title;
-
+    logoText.innerText = "Free Web Games | " + title;
 }
 
 function closeGame() {
-
     viewer.style.display = "none";
-
-    gameFrame.src = "";
-
+    frame.src = "";
     homeButton.style.display = "none";
-
     logoText.innerText = "Free Web Games";
-
 }
 
-homeButton.addEventListener("click", closeGame);
+homeButton.onclick = closeGame;
+
+searchBox.addEventListener("input", renderGames);
+
+async function loadConfig() {
+    try {
+        const res = await fetch("config.txt", { cache: "no-store" });
+        const text = await res.text();
+
+        games = parseConfig(text);
+        buildCategories();
+        renderGames();
+    } catch (err) {
+        grid.innerHTML = `
+            <div style="color:#ffb4b4;padding:20px;">
+                Could not load config.txt
+            </div>
+        `;
+        console.error(err);
+    }
+}
+
+document.querySelector('.cat[data-cat="all"]').onclick = () => {
+    currentCategory = "all";
+    setActiveCategoryButton("all");
+    renderGames();
+};
+
+loadConfig();
 </script>
 
 </body>
