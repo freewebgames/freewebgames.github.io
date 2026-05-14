@@ -1,0 +1,11 @@
+title|Balatro
+desc|Poker roguelike deckbuilder with powerful synergies and endless runs.
+img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7a85430784e4d613cdb0547414d8cf16ffa45747/header.jpg
+url|https://freewebgames.github.io/balatro/index.html
+cat|Card Games, Roguelike, Indie
+
+title|Undertale
+desc|A story-driven RPG where choices matter and combat can be avoided.
+img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg
+url|https://freewebgames.github.io/undertale/index.html
+cat|RPG, Story, Indie
