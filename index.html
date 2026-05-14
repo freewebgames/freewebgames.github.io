@@ -222,9 +222,19 @@ body{
 .input-icons{
     display:flex;
     align-items:center;
-    gap:4px;
-    font-size:1rem;
+    gap:6px;
     line-height:1;
+}
+
+.input-icons svg{
+    width:15px;
+    height:15px;
+    display:block;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
 .game-desc{
@@ -410,20 +420,55 @@ function parseConfig(text) {
     }).filter(g => g.title && g.url);
 }
 
+function iconSVG(kind) {
+    const common = `stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true" focusable="false"`;
+    if (kind === "keyboard") {
+        return `<svg ${common}><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M6 10h0M9 10h0M12 10h0M15 10h0M18 10h0M6 14h12"></path></svg>`;
+    }
+    if (kind === "mouse") {
+        return `<svg ${common}><path d="M12 3c3 0 5 2 5 5v8c0 3-2 5-5 5s-5-2-5-5V8c0-3 2-5 5-5z"></path><path d="M12 7v4"></path></svg>`;
+    }
+    if (kind === "touch") {
+        return `<svg ${common}><path d="M8 11.5V7.5a1.5 1.5 0 0 1 3 0V12"></path><path d="M11 12V6.8a1.2 1.2 0 0 1 2.4 0V12"></path><path d="M13.4 12V8a1.1 1.1 0 0 1 2.2 0v4"></path><path d="M15.6 12V9.2a1 1 0 0 1 2 0V15c0 3-2 5-5 5h-1.5c-2.8 0-4.1-1.2-5.2-3.2L5 15.3"></path></svg>`;
+    }
+    return `<svg ${common}><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>`;
+}
+
 function inputMeta(type) {
     const map = {
-        keyboard: { label: "keyboard", icons: ["⌨"] },
-        mouse: { label: "mouse", icons: ["🖱"] },
-        touch: { label: "touch", icons: ["👆"] },
-        "keyboard+mouse": { label: "keyboard and mouse", icons: ["⌨", "🖱"] },
-        "keyboard+touch": { label: "keyboard and touch", icons: ["⌨", "👆"] },
-        "mouse+touch": { label: "mouse and touch", icons: ["🖱", "👆"] },
-        all: { label: "keyboard, mouse and touch", icons: ["⌨", "🖱", "👆"] }
+        keyboard: {
+            label: "keyboard",
+            icons: ["keyboard"]
+        },
+        mouse: {
+            label: "mouse",
+            icons: ["mouse"]
+        },
+        touch: {
+            label: "touch",
+            icons: ["touch"]
+        },
+        "keyboard+mouse": {
+            label: "keyboard and mouse",
+            icons: ["keyboard", "mouse"]
+        },
+        "keyboard+touch": {
+            label: "keyboard and touch",
+            icons: ["keyboard", "touch"]
+        },
+        "mouse+touch": {
+            label: "mouse and touch",
+            icons: ["mouse", "touch"]
+        },
+        all: {
+            label: "keyboard, mouse and touch",
+            icons: ["keyboard", "mouse", "touch"]
+        }
     };
 
     return map[type] || {
         label: type || "unknown",
-        icons: ["?"]
+        icons: ["touch"]
     };
 }
 
@@ -502,7 +547,7 @@ function renderGames() {
                     <div class="game-title">${g.title || ""}</div>
                     <div class="input-badge" title="${meta.label}">
                         <span class="input-icons" aria-hidden="true">
-                            ${meta.icons.map(i => `<span>${i}</span>`).join("")}
+                            ${meta.icons.map(i => iconSVG(i)).join("")}
                         </span>
                         <span>${meta.label}</span>
                     </div>
