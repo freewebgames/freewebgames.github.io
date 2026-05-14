@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Free Web Games</title>
 
 <style>
@@ -60,7 +61,6 @@ body {
     background: #171a21;
     padding: 20px;
     border-right: 1px solid #000;
-    overflow-y: auto;
 }
 
 .sidebar h2 {
@@ -121,7 +121,7 @@ body {
 
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
     gap: 22px;
 }
 
@@ -142,7 +142,7 @@ body {
 
 .game-image {
     width: 100%;
-    height: 180px;
+    height: 220px;
     object-fit: cover;
     display: block;
 }
@@ -152,14 +152,14 @@ body {
 }
 
 .game-title {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: white;
     margin-bottom: 8px;
     font-weight: bold;
 }
 
 .game-desc {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     color: #8f98a0;
     line-height: 1.4;
     margin-bottom: 14px;
@@ -185,44 +185,14 @@ body {
     inset: 72px 0 0 0;
     background: #0b1118;
     display: none;
-    flex-direction: column;
     z-index: 999;
 }
 
 .viewer iframe {
-    flex: 1;
     width: 100%;
+    height: 100%;
     border: none;
     background: black;
-}
-
-.viewer-topbar {
-    height: 54px;
-    background: #171d25;
-    border-bottom: 1px solid #000;
-    display: flex;
-    align-items: center;
-    padding: 0 18px;
-    gap: 12px;
-}
-
-.viewer-title {
-    color: white;
-    font-weight: bold;
-}
-
-.viewer-back {
-    background: #417a9b;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.viewer-back:hover {
-    background: #4d90b8;
 }
 
 .footer {
@@ -257,34 +227,37 @@ body {
 <body>
 
 <div class="topbar">
-    <div class="logo">Free Web Games</div>
+
+    <div class="logo" id="logoText">
+        Free Web Games
+    </div>
 
     <button class="back-button" id="homeButton">
         Back To Library
     </button>
+
 </div>
 
 <div class="main">
 
     <div class="sidebar">
+
         <h2>Library</h2>
 
         <a href="#">All Games</a>
-        <a href="#">Action</a>
-        <a href="#">Puzzle</a>
-        <a href="#">Arcade</a>
-        <a href="#">Sandbox</a>
-
-        <h2 style="margin-top: 24px;">Collections</h2>
-
-        <a href="#">Recently Added</a>
+        <a href="#">Card Games</a>
+        <a href="#">Indie</a>
         <a href="#">Popular</a>
+
     </div>
 
-    <div class="content" id="libraryContent">
+    <div class="content">
 
         <div class="header-row">
-            <div class="library-title">Your Library</div>
+
+            <div class="library-title">
+                Your Library
+            </div>
 
             <input
                 type="text"
@@ -292,59 +265,40 @@ body {
                 id="searchBox"
                 placeholder="Search games..."
             >
+
         </div>
 
         <div class="games-grid" id="gamesGrid">
 
             <div class="game-card">
-                <img class="game-image" src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7a85430784e4d613cdb0547414d8cf16ffa45747/header.jpg">
+
+                <img
+                    class="game-image"
+                    src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7a85430784e4d613cdb0547414d8cf16ffa45747/header.jpg"
+                >
 
                 <div class="game-info">
-                    <div class="game-title">Belatro</div>
 
-                    <div class="game-desc">
-                        The poker roguelike. Balatro is a hypnotically satisfying deckbuilder where you play illegal poker hands, discover game-changing jokers, and trigger adrenaline-pumping, outrageous combos. 
+                    <div class="game-title">
+                        Balatro
                     </div>
 
-                    <button class="play-button"
-                        onclick="openGame('/belatro/', 'Belatro')">
-                        Play
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card">
-                <img class="game-image" src="https://picsum.photos/600/300?2">
-
-                <div class="game-info">
-                    <div class="game-title">Cube Worlds</div>
-
                     <div class="game-desc">
-                        Explore infinite voxel worlds directly in your browser.
+                        Poker roguelike deckbuilder with powerful synergies and endless runs.
                     </div>
 
-                    <button class="play-button"
-                        onclick="openGame('/cube-worlds/', 'Cube Worlds')">
+                    <button
+                        class="play-button"
+                        onclick="openGame(
+                            'https://freewebgames.github.io/balatro/index.html',
+                            'Balatro'
+                        )"
+                    >
                         Play
                     </button>
+
                 </div>
-            </div>
 
-            <div class="game-card">
-                <img class="game-image" src="https://picsum.photos/600/300?3">
-
-                <div class="game-info">
-                    <div class="game-title">Drift Rush</div>
-
-                    <div class="game-desc">
-                        Browser racing with online leaderboards.
-                    </div>
-
-                    <button class="play-button"
-                        onclick="openGame('/drift-rush/', 'Drift Rush')">
-                        Play
-                    </button>
-                </div>
             </div>
 
         </div>
@@ -358,19 +312,7 @@ body {
 </div>
 
 <div class="viewer" id="viewer">
-
-    <div class="viewer-topbar">
-        <button class="viewer-back" onclick="closeGame()">
-            ← Back
-        </button>
-
-        <div class="viewer-title" id="viewerTitle">
-            Game
-        </div>
-    </div>
-
     <iframe id="gameFrame"></iframe>
-
 </div>
 
 <script>
@@ -379,40 +321,52 @@ const cards = document.querySelectorAll(".game-card");
 
 const viewer = document.getElementById("viewer");
 const gameFrame = document.getElementById("gameFrame");
-const viewerTitle = document.getElementById("viewerTitle");
+
 const homeButton = document.getElementById("homeButton");
+const logoText = document.getElementById("logoText");
 
 searchBox.addEventListener("input", () => {
+
     const term = searchBox.value.toLowerCase();
 
     cards.forEach(card => {
+
         const title = card.querySelector(".game-title")
             .innerText
             .toLowerCase();
 
         card.style.display =
-            title.includes(term) ? "" : "none";
+            title.includes(term)
+                ? ""
+                : "none";
+
     });
+
 });
 
 function openGame(url, title) {
-    gameFrame.src = url;
-    viewerTitle.innerText = title;
 
-    viewer.style.display = "flex";
+    gameFrame.src = url;
+
+    viewer.style.display = "block";
+
     homeButton.style.display = "block";
 
-    document.body.style.overflow = "hidden";
+    logoText.innerText =
+        "Free Web Games | " + title;
+
 }
 
 function closeGame() {
+
     viewer.style.display = "none";
 
     gameFrame.src = "";
 
     homeButton.style.display = "none";
 
-    document.body.style.overflow = "hidden";
+    logoText.innerText = "Free Web Games";
+
 }
 
 homeButton.addEventListener("click", closeGame);
