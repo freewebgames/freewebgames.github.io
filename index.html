@@ -18,6 +18,8 @@
     --blue:#417a9b;
     --green1:#75b022;
     --green2:#588a1b;
+    --orange1:#d68a2f;
+    --orange2:#a8651d;
 }
 
 *{
@@ -232,18 +234,44 @@ body{
     margin-bottom:14px;
 }
 
-.play-button{
+.action-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+}
+
+.play-button,
+.support-button{
     border:none;
-    background:linear-gradient(to bottom, var(--green1), var(--green2));
     color:#fff;
     padding:10px 18px;
     border-radius:4px;
     font-weight:700;
     cursor:pointer;
     box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+    min-height:38px;
+}
+
+.play-button{
+    background:linear-gradient(to bottom, var(--green1), var(--green2));
 }
 
 .play-button:hover{
+    filter:brightness(1.08);
+}
+
+.support-button{
+    background:linear-gradient(to bottom, var(--orange1), var(--orange2));
+}
+
+.support-button:hover{
     filter:brightness(1.08);
 }
 
@@ -375,6 +403,8 @@ function parseConfig(text) {
             .filter(Boolean);
 
         obj.input = (obj.input || "keyboard+mouse").trim().toLowerCase();
+        obj.creator_name = (obj.creator_name || "").trim();
+        obj.creator_url = (obj.creator_url || "").trim();
 
         return obj;
     }).filter(g => g.title && g.url);
@@ -382,34 +412,13 @@ function parseConfig(text) {
 
 function inputMeta(type) {
     const map = {
-        keyboard: {
-            label: "keyboard",
-            icons: ["⌨"]
-        },
-        mouse: {
-            label: "mouse",
-            icons: ["🖱"]
-        },
-        touch: {
-            label: "touch",
-            icons: ["👆"]
-        },
-        "keyboard+mouse": {
-            label: "keyboard and mouse",
-            icons: ["⌨", "🖱"]
-        },
-        "keyboard+touch": {
-            label: "keyboard and touch",
-            icons: ["⌨", "👆"]
-        },
-        "mouse+touch": {
-            label: "mouse and touch",
-            icons: ["🖱", "👆"]
-        },
-        all: {
-            label: "keyboard, mouse and touch",
-            icons: ["⌨", "🖱", "👆"]
-        }
+        keyboard: { label: "keyboard", icons: ["⌨"] },
+        mouse: { label: "mouse", icons: ["🖱"] },
+        touch: { label: "touch", icons: ["👆"] },
+        "keyboard+mouse": { label: "keyboard and mouse", icons: ["⌨", "🖱"] },
+        "keyboard+touch": { label: "keyboard and touch", icons: ["⌨", "👆"] },
+        "mouse+touch": { label: "mouse and touch", icons: ["🖱", "👆"] },
+        all: { label: "keyboard, mouse and touch", icons: ["⌨", "🖱", "👆"] }
     };
 
     return map[type] || {
@@ -480,6 +489,12 @@ function renderGames() {
         const card = document.createElement("div");
         card.className = "game-card";
 
+        const supportButtonHTML = g.creator_url
+            ? `<a class="support-button" href="${g.creator_url}" target="_blank" rel="noopener noreferrer">
+                   Support ${g.creator_name ? g.creator_name : "Creator"}
+               </a>`
+            : "";
+
         card.innerHTML = `
             <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
             <div class="game-info">
@@ -493,7 +508,10 @@ function renderGames() {
                     </div>
                 </div>
                 <div class="game-desc">${g.desc || ""}</div>
-                <button class="play-button" type="button">Play</button>
+                <div class="action-row">
+                    <button class="play-button" type="button">Play</button>
+                    ${supportButtonHTML}
+                </div>
             </div>
         `;
 
@@ -521,6 +539,7 @@ function closeGame() {
 
 homeButton.addEventListener("click", closeGame);
 searchBox.addEventListener("input", renderGames);
+
 allCatButton.addEventListener("click", () => {
     currentCategory = "all";
     setActiveCategory("all");
