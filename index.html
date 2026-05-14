@@ -1,226 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Free Web Games</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+:root{
+    --bg:#101822;
+    --panel:#171a21;
+    --panel2:#16202d;
+    --panel3:#1b2838;
+    --line:#000;
+    --text:#c7d5e0;
+    --muted:#8f98a0;
+    --accent:#66c0f4;
+    --blue:#417a9b;
+    --green1:#75b022;
+    --green2:#588a1b;
+}
 
-body {
-    background:#101822;
-    color:#c7d5e0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    height:100%;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
     font-family:Arial, Helvetica, sans-serif;
     overflow:hidden;
 }
 
-.topbar {
+.topbar{
     height:72px;
-    background:linear-gradient(to bottom,#1b2838,#171d25);
+    background:linear-gradient(to bottom, var(--panel3), #171d25);
     display:flex;
     align-items:center;
     justify-content:space-between;
     padding:0 28px;
-    border-bottom:1px solid #000;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    z-index:30;
 }
 
-.logo {
-    font-size:2rem;
-    font-weight:bold;
-    color:white;
+.logo{
+    font-size:1.9rem;
+    font-weight:700;
+    color:#fff;
+    letter-spacing:.2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
-.back-button {
-    background:#417a9b;
+.back-button{
+    display:none;
     border:none;
-    color:white;
+    background:var(--blue);
+    color:#fff;
     padding:10px 18px;
     border-radius:6px;
+    font-weight:700;
     cursor:pointer;
-    display:none;
-    font-weight:bold;
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
 }
 
-.back-button:hover {
-    background:#4d90b8;
+.back-button:hover{
+    filter:brightness(1.08);
 }
 
-.main {
+.main{
     display:flex;
     height:calc(100vh - 72px);
+    min-height:0;
 }
 
-.sidebar {
+.sidebar{
     width:260px;
-    background:#171a21;
+    background:var(--panel);
     padding:20px;
-    border-right:1px solid #000;
+    border-right:1px solid var(--line);
     overflow-y:auto;
+    min-height:0;
 }
 
-.sidebar h2 {
-    font-size:0.9rem;
-    color:#66c0f4;
+.sidebar h2{
+    font-size:.85rem;
+    color:var(--accent);
     margin-bottom:12px;
     text-transform:uppercase;
     letter-spacing:1px;
 }
 
-.sidebar a {
+.cat{
     display:block;
-    color:#c7d5e0;
+    color:var(--text);
     text-decoration:none;
     padding:10px 12px;
     border-radius:6px;
     margin-bottom:4px;
     cursor:pointer;
+    user-select:none;
+    transition:background .15s ease, color .15s ease;
 }
 
-.sidebar a:hover,
-.sidebar a.active {
+.cat:hover,
+.cat.active{
     background:#2a475e;
-    color:white;
+    color:#fff;
 }
 
-.content {
+.content{
     flex:1;
+    min-width:0;
     overflow-y:auto;
     padding:30px;
+    min-height:0;
 }
 
-.header-row {
+.header-row{
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
     gap:16px;
     margin-bottom:24px;
 }
 
-.library-title {
+.library-title{
     font-size:2rem;
-    font-weight:bold;
-    color:white;
+    font-weight:700;
+    color:#fff;
 }
 
-.search {
-    background:#316282;
+.search{
+    width:min(320px, 100%);
     border:none;
+    outline:none;
+    background:#316282;
+    color:#fff;
     padding:10px 14px;
     border-radius:4px;
-    color:white;
-    width:280px;
-    outline:none;
+    font-size:1rem;
 }
 
-.search::placeholder {
+.search::placeholder{
     color:#d6e8f3;
 }
 
-.games-grid {
+.games-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(420px,1fr));
+    grid-template-columns:repeat(auto-fill, minmax(420px, 1fr));
     gap:22px;
+    align-items:start;
 }
 
-.game-card {
-    background:#16202d;
+.game-card{
+    background:var(--panel2);
+    border:1px solid rgba(0,0,0,.35);
     border-radius:10px;
     overflow:hidden;
-    transition:0.2s;
-    cursor:pointer;
-    border:1px solid #00000055;
+    transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+    cursor:default;
 }
 
-.game-card:hover {
+.game-card:hover{
     transform:translateY(-4px);
     background:#1d2c3d;
-    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
 }
 
-.game-image {
+.game-image{
     width:100%;
     height:220px;
     object-fit:cover;
     display:block;
+    background:#000;
 }
 
-.game-info {
+.game-info{
     padding:16px;
 }
 
-.game-title {
-    font-size:1.3rem;
-    color:white;
+.game-toprow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
     margin-bottom:8px;
-    font-weight:bold;
 }
 
-.game-desc {
-    font-size:0.95rem;
-    color:#8f98a0;
-    line-height:1.4;
+.game-title{
+    font-size:1.25rem;
+    color:#fff;
+    font-weight:700;
+    line-height:1.2;
+    min-width:0;
+}
+
+.input-badge{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:#b8c7d6;
+    font-size:.88rem;
+    white-space:nowrap;
+}
+
+.input-icons{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:1rem;
+    line-height:1;
+}
+
+.game-desc{
+    color:var(--muted);
+    font-size:.95rem;
+    line-height:1.45;
     margin-bottom:14px;
 }
 
-.play-button {
-    display:inline-block;
-    background:linear-gradient(to bottom,#75b022,#588a1b);
-    color:white;
+.play-button{
     border:none;
+    background:linear-gradient(to bottom, var(--green1), var(--green2));
+    color:#fff;
     padding:10px 18px;
     border-radius:4px;
-    font-weight:bold;
+    font-weight:700;
     cursor:pointer;
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
 }
 
-.play-button:hover {
-    filter:brightness(1.1);
+.play-button:hover{
+    filter:brightness(1.08);
 }
 
-.viewer {
+.footer{
+    margin-top:30px;
+    text-align:center;
+    color:#6b7a88;
+    font-size:.9rem;
+    padding-bottom:10px;
+}
+
+.viewer{
     position:fixed;
     inset:72px 0 0 0;
     background:#0b1118;
     display:none;
-    z-index:999;
+    z-index:20;
 }
 
-.viewer iframe {
+.viewer iframe{
     width:100%;
     height:100%;
     border:none;
-    background:black;
+    background:#000;
 }
 
-.footer {
-    padding:30px;
-    text-align:center;
-    color:#6b7a88;
-    font-size:0.9rem;
+.empty-state{
+    color:#8f98a0;
+    padding:18px 4px;
+    font-size:1rem;
 }
 
-@media (max-width: 900px) {
-    .sidebar {
+@media (max-width: 900px){
+    .sidebar{
         display:none;
     }
 
-    .content {
+    .content{
         padding:20px;
     }
 
-    .header-row {
+    .header-row{
         flex-direction:column;
         align-items:stretch;
     }
 
-    .search {
+    .search{
         width:100%;
+    }
+
+    .games-grid{
+        grid-template-columns:1fr;
+    }
+
+    .game-toprow{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .input-badge{
+        width:fit-content;
     }
 }
 </style>
 </head>
-
 <body>
 
 <div class="topbar">
@@ -229,26 +317,25 @@ body {
 </div>
 
 <div class="main">
-    <div class="sidebar">
+    <aside class="sidebar">
         <h2>Categories</h2>
         <a class="cat active" data-cat="all">All Games</a>
         <div id="catList"></div>
-    </div>
+    </aside>
 
-    <div class="content">
+    <section class="content">
         <div class="header-row">
             <div class="library-title">Game Library</div>
-            <input class="search" id="searchBox" placeholder="Search games...">
+            <input id="searchBox" class="search" type="text" placeholder="Search games..." />
         </div>
 
-        <div class="games-grid" id="gamesGrid"></div>
-
+        <div id="gamesGrid" class="games-grid"></div>
         <div class="footer">Free Web Games © 2026</div>
-    </div>
+    </section>
 </div>
 
 <div class="viewer" id="viewer">
-    <iframe id="gameFrame"></iframe>
+    <iframe id="gameFrame" title="Game frame"></iframe>
 </div>
 
 <script>
@@ -262,15 +349,21 @@ const viewer = document.getElementById("viewer");
 const frame = document.getElementById("gameFrame");
 const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
+const allCatButton = document.querySelector('.cat[data-cat="all"]');
 
 function parseConfig(text) {
-    const blocks = text.trim().split(/\n\s*\n/).filter(Boolean);
+    const blocks = text
+        .trim()
+        .split(/\n\s*\n/)
+        .filter(Boolean);
 
     return blocks.map(block => {
         const obj = {};
+
         block.split("\n").forEach(line => {
             const idx = line.indexOf("|");
             if (idx === -1) return;
+
             const key = line.slice(0, idx).trim().toLowerCase();
             const value = line.slice(idx + 1).trim();
             obj[key] = value;
@@ -281,14 +374,52 @@ function parseConfig(text) {
             .map(s => s.trim())
             .filter(Boolean);
 
+        obj.input = (obj.input || "keyboard+mouse").trim().toLowerCase();
+
         return obj;
     }).filter(g => g.title && g.url);
 }
 
-function uniqueCategoriesFromGames() {
-    return [...new Set(
-        games.flatMap(g => Array.isArray(g.cat) ? g.cat : [])
-    )];
+function inputMeta(type) {
+    const map = {
+        keyboard: {
+            label: "keyboard",
+            icons: ["⌨"]
+        },
+        mouse: {
+            label: "mouse",
+            icons: ["🖱"]
+        },
+        touch: {
+            label: "touch",
+            icons: ["👆"]
+        },
+        "keyboard+mouse": {
+            label: "keyboard and mouse",
+            icons: ["⌨", "🖱"]
+        },
+        "keyboard+touch": {
+            label: "keyboard and touch",
+            icons: ["⌨", "👆"]
+        },
+        "mouse+touch": {
+            label: "mouse and touch",
+            icons: ["🖱", "👆"]
+        },
+        all: {
+            label: "keyboard, mouse and touch",
+            icons: ["⌨", "🖱", "👆"]
+        }
+    };
+
+    return map[type] || {
+        label: type || "unknown",
+        icons: ["?"]
+    };
+}
+
+function uniqueCategories() {
+    return [...new Set(games.flatMap(g => Array.isArray(g.cat) ? g.cat : []))];
 }
 
 function gameMatchesCategory(game, category) {
@@ -296,16 +427,55 @@ function gameMatchesCategory(game, category) {
     return Array.isArray(game.cat) && game.cat.includes(category);
 }
 
+function gameMatchesSearch(game, term) {
+    if (!term) return true;
+    const title = (game.title || "").toLowerCase();
+    const desc = (game.desc || "").toLowerCase();
+    return title.includes(term) || desc.includes(term);
+}
+
+function setActiveCategory(category) {
+    document.querySelectorAll(".cat").forEach(el => el.classList.remove("active"));
+    const active = document.querySelector(`.cat[data-cat="${category}"]`);
+    if (active) active.classList.add("active");
+}
+
+function renderCategories() {
+    catList.innerHTML = "";
+
+    uniqueCategories().forEach(category => {
+        const a = document.createElement("a");
+        a.className = "cat";
+        a.dataset.cat = category;
+        a.textContent = category;
+        a.addEventListener("click", () => {
+            currentCategory = category;
+            setActiveCategory(category);
+            renderGames();
+        });
+        catList.appendChild(a);
+    });
+}
+
 function renderGames() {
-    const term = searchBox.value.toLowerCase();
+    const term = searchBox.value.trim().toLowerCase();
     grid.innerHTML = "";
 
-    games.forEach(g => {
-        const title = (g.title || "").toLowerCase();
-        const desc = (g.desc || "").toLowerCase();
+    const filtered = games.filter(g =>
+        gameMatchesCategory(g, currentCategory) &&
+        gameMatchesSearch(g, term)
+    );
 
-        if (!gameMatchesCategory(g, currentCategory)) return;
-        if (term && !title.includes(term) && !desc.includes(term)) return;
+    if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No games match the current filter.";
+        grid.appendChild(empty);
+        return;
+    }
+
+    filtered.forEach(g => {
+        const meta = inputMeta(g.input);
 
         const card = document.createElement("div");
         card.className = "game-card";
@@ -313,37 +483,25 @@ function renderGames() {
         card.innerHTML = `
             <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
             <div class="game-info">
-                <div class="game-title">${g.title || ""}</div>
+                <div class="game-toprow">
+                    <div class="game-title">${g.title || ""}</div>
+                    <div class="input-badge" title="${meta.label}">
+                        <span class="input-icons" aria-hidden="true">
+                            ${meta.icons.map(i => `<span>${i}</span>`).join("")}
+                        </span>
+                        <span>${meta.label}</span>
+                    </div>
+                </div>
                 <div class="game-desc">${g.desc || ""}</div>
-                <button class="play-button">Play</button>
+                <button class="play-button" type="button">Play</button>
             </div>
         `;
 
-        card.querySelector("button").onclick = () => openGame(g.url, g.title || "Game");
+        card.querySelector(".play-button").addEventListener("click", () => {
+            openGame(g.url, g.title || "Game");
+        });
+
         grid.appendChild(card);
-    });
-}
-
-function setActiveCategoryButton(category) {
-    document.querySelectorAll(".cat").forEach(x => x.classList.remove("active"));
-    const active = document.querySelector(`.cat[data-cat="${CSS.escape(category)}"]`);
-    if (active) active.classList.add("active");
-}
-
-function buildCategories() {
-    catList.innerHTML = "";
-
-    uniqueCategoriesFromGames().forEach(c => {
-        const a = document.createElement("a");
-        a.textContent = c;
-        a.className = "cat";
-        a.dataset.cat = c;
-        a.onclick = () => {
-            currentCategory = c;
-            setActiveCategoryButton(c);
-            renderGames();
-        };
-        catList.appendChild(a);
     });
 }
 
@@ -351,43 +509,43 @@ function openGame(url, title) {
     frame.src = url;
     viewer.style.display = "block";
     homeButton.style.display = "block";
-    logoText.innerText = "Free Web Games | " + title;
+    logoText.textContent = `Free Web Games | ${title}`;
 }
 
 function closeGame() {
     viewer.style.display = "none";
     frame.src = "";
     homeButton.style.display = "none";
-    logoText.innerText = "Free Web Games";
+    logoText.textContent = "Free Web Games";
 }
 
-homeButton.onclick = closeGame;
-
+homeButton.addEventListener("click", closeGame);
 searchBox.addEventListener("input", renderGames);
+allCatButton.addEventListener("click", () => {
+    currentCategory = "all";
+    setActiveCategory("all");
+    renderGames();
+});
 
 async function loadConfig() {
     try {
         const res = await fetch("config.txt", { cache: "no-store" });
-        const text = await res.text();
+        if (!res.ok) throw new Error(`config.txt load failed: ${res.status}`);
 
+        const text = await res.text();
         games = parseConfig(text);
-        buildCategories();
+
+        renderCategories();
         renderGames();
     } catch (err) {
+        console.error(err);
         grid.innerHTML = `
-            <div style="color:#ffb4b4;padding:20px;">
-                Could not load config.txt
+            <div class="empty-state">
+                Could not load config.txt.
             </div>
         `;
-        console.error(err);
     }
 }
-
-document.querySelector('.cat[data-cat="all"]').onclick = () => {
-    currentCategory = "all";
-    setActiveCategoryButton("all");
-    renderGames();
-};
 
 loadConfig();
 </script>
