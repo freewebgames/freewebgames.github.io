@@ -10,4 +10,4 @@ desc|A story-driven RPG where choices matter and combat can be avoided.
 img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg
 url|https://freewebgames.github.io/undertale/index.html
 cat|RPG, Story, Indie
-input|mouse+touch
+input|keyboard
