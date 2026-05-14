@@ -4,6 +4,8 @@ img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7
 url|https://freewebgames.github.io/balatro/index.html
 cat|Card Games, Roguelike, Indie
 input|mouse+touch
+creator_name|LocalThunk
+creator_url|https://store.steampowered.com/app/2379780/Balatro/
 
 title|Undertale
 desc|A story-driven RPG where choices matter and combat can be avoided.
@@ -11,3 +13,5 @@ img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/he
 url|https://freewebgames.github.io/undertale/index.html
 cat|RPG, Story, Indie
 input|keyboard
+creator_name|Toby Fox
+creator_url|https://store.steampowered.com/app/391540/Undertale/
