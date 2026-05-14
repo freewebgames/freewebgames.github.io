@@ -15,3 +15,12 @@ cat|RPG, Story, Indie
 input|keyboard
 creator_name|Toby Fox
 creator_url|https://store.steampowered.com/app/391540/Undertale/
+
+title|Cookie Clicker
+desc|An incremental idle game about clicking cookies and building an absurd production empire.
+img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1454400/header.jpg
+url|https://freewebgames.github.io/cookie-clicker/index.html
+cat|Simulation, Story, Indie
+input|all
+creator_name|Orteil
+creator_url|https://orteil.dashnet.org/
