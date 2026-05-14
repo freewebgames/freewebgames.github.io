@@ -23,4 +23,4 @@ url|https://freewebgames.github.io/cookie-clicker/index.html
 cat|Simulation, Story, Indie
 input|all
 creator_name|Orteil
-creator_url|https://orteil.dashnet.org/
+creator_url|https://store.steampowered.com/app/1454400/Cookie_Clicker/
