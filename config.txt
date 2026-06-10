@@ -2,7 +2,7 @@ title|Balatro
 desc|Poker roguelike deckbuilder with powerful synergies and endless runs. Does not work on iOS or iPadOS :/
 img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7a85430784e4d613cdb0547414d8cf16ffa45747/header.jpg
 url|https://freewebgames.github.io/balatro/index.html
-cat|Card Games, Roguelike, Indie
+cat|Card Games, Roguelike, Indie, Endless
 input|mouse+touch
 creator_name|LocalThunk
 creator_url|https://store.steampowered.com/app/2379780/Balatro/
@@ -20,7 +20,14 @@ title|Cookie Clicker
 desc|An incremental idle game about clicking cookies and building an absurd production empire.
 img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1454400/header.jpg
 url|https://freewebgames.github.io/cookie-clicker/index.html
-cat|Simulation, Story, Indie
+cat|Simulation, Story, Indie, Endless
 input|all
 creator_name|Orteil
 creator_url|https://store.steampowered.com/app/1454400/Cookie_Clicker/
+
+title|Eggy Car
+desc|Eggy Car is a fun driving game where you cruise over bumpy hills and tricky terrain while trying to keep a fragile egg balanced on top of your car.
+img|https://assets.funnygames.se/9/113739/96341/1344x896/eggy-car.jpg
+url|https://freewebgames.github.io/Eggy%20Car.html
+cat|Physics, Endless
+input|keyboard, touch
