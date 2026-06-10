@@ -24,8 +24,8 @@
     --orange1:#d68a2f;
     --orange2:#a8651d;
     --viewer-border:#ffffff;
-    --viewer-radius:4px;
-    --viewer-border-width:4px;
+    --viewer-border-width:3px;
+    --viewer-radius:3px;
 }
 
 *{
@@ -305,25 +305,38 @@ body{
     background:#0b1118;
     display:none;
     z-index:20;
-    align-items:center;
-    justify-content:center;
     padding:20px;
     overflow:auto;
+    box-sizing:border-box;
 }
 
-/* Shared frame treatment */
+.viewer.html-mode{
+    display:flex;
+    align-items:stretch;
+    justify-content:stretch;
+}
+
+.viewer.flash-mode{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* Shared viewer frame */
 .game-shell{
     border:var(--viewer-border-width) solid var(--viewer-border);
     border-radius:var(--viewer-radius);
     background:#000;
     box-shadow:0 10px 30px rgba(0,0,0,.45);
     overflow:hidden;
+    transform-origin:center center;
 }
 
-/* HTML games: use all available space */
+/* HTML games fill all available space */
 .game-shell.html-shell{
     width:100%;
     height:100%;
+    flex:1 1 auto;
 }
 
 .game-shell.html-shell iframe{
@@ -335,45 +348,28 @@ body{
     border-radius:inherit;
 }
 
-/* Flash games: fixed 800x600 content, scaled to fit available space */
+/* Flash games are 800x600 and scale as one unit */
 .game-shell.flash-shell{
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.flash-viewport{
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-}
-
-.flash-stage{
     width:800px;
     height:600px;
-    transform-origin:center center;
-    will-change:transform;
     flex:0 0 auto;
 }
 
-.flash-stage > *{
+.game-shell.flash-shell iframe,
+.game-shell.flash-shell #ruffleContainer,
+.game-shell.flash-shell #ruffleContainer > *{
     width:100%;
     height:100%;
-    display:block;
     border:none;
-    border-radius:inherit;
+    display:block;
     background:#000;
+    border-radius:inherit;
 }
 
 #ruffleContainer{
     width:100%;
     height:100%;
-    border-radius:inherit;
+    display:none;
 }
 
 .empty-state{
@@ -443,12 +439,7 @@ body{
 <div class="viewer" id="viewer">
     <div id="gameShell" class="game-shell html-shell">
         <iframe id="gameFrame" title="Game frame"></iframe>
-
-        <div class="flash-viewport" id="flashViewport" style="display:none;">
-            <div class="flash-stage" id="flashStage">
-                <div id="ruffleContainer"></div>
-            </div>
-        </div>
+        <div id="ruffleContainer"></div>
     </div>
 </div>
 
@@ -462,15 +453,12 @@ const searchBox = document.getElementById("searchBox");
 const viewer = document.getElementById("viewer");
 const gameShell = document.getElementById("gameShell");
 const frame = document.getElementById("gameFrame");
-const flashViewport = document.getElementById("flashViewport");
-const flashStage = document.getElementById("flashStage");
 const ruffleContainer = document.getElementById("ruffleContainer");
 const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
 
 let currentMode = "html";
-let currentFlashPlayer = null;
 
 function parseConfig(text) {
     const blocks = text
@@ -519,34 +507,13 @@ function iconSVG(kind) {
 
 function inputMeta(type) {
     const map = {
-        keyboard: {
-            label: "keyboard",
-            icons: ["keyboard"]
-        },
-        mouse: {
-            label: "mouse",
-            icons: ["mouse"]
-        },
-        touch: {
-            label: "touch",
-            icons: ["touch"]
-        },
-        "keyboard+mouse": {
-            label: "keyboard and mouse",
-            icons: ["keyboard", "mouse"]
-        },
-        "keyboard+touch": {
-            label: "keyboard and touch",
-            icons: ["keyboard", "touch"]
-        },
-        "mouse+touch": {
-            label: "mouse and touch",
-            icons: ["mouse", "touch"]
-        },
-        all: {
-            label: "keyboard, mouse, and touch",
-            icons: ["keyboard", "mouse", "touch"]
-        }
+        keyboard: { label: "keyboard", icons: ["keyboard"] },
+        mouse: { label: "mouse", icons: ["mouse"] },
+        touch: { label: "touch", icons: ["touch"] },
+        "keyboard+mouse": { label: "keyboard and mouse", icons: ["keyboard", "mouse"] },
+        "keyboard+touch": { label: "keyboard and touch", icons: ["keyboard", "touch"] },
+        "mouse+touch": { label: "mouse and touch", icons: ["mouse", "touch"] },
+        all: { label: "keyboard, mouse, and touch", icons: ["keyboard", "mouse", "touch"] }
     };
 
     return map[type] || {
@@ -658,21 +625,20 @@ function isFlashGame(url) {
 function clearViewerContent() {
     frame.src = "";
     ruffleContainer.innerHTML = "";
-    currentFlashPlayer = null;
 }
 
 function updateFlashScale() {
     if (currentMode !== "flash") return;
 
-    const availW = flashViewport.clientWidth;
-    const availH = flashViewport.clientHeight;
+    const availableW = viewer.clientWidth - 40;
+    const availableH = viewer.clientHeight - 40;
 
-    const scale = Math.min(availW / 800, availH / 600);
-    flashStage.style.transform = `scale(${scale})`;
+    const scale = Math.min(availableW / 800, availableH / 600);
+    gameShell.style.transform = `scale(${scale})`;
 }
 
 function openGame(url, title) {
-    viewer.style.display = "flex";
+    viewer.classList.remove("html-mode", "flash-mode");
     homeButton.style.display = "block";
     logoText.textContent = `Free Web Games | ${title}`;
 
@@ -680,36 +646,39 @@ function openGame(url, title) {
 
     if (isFlashGame(url) && window.RufflePlayer) {
         currentMode = "flash";
+        viewer.classList.add("flash-mode");
+
         gameShell.classList.remove("html-shell");
         gameShell.classList.add("flash-shell");
 
         frame.style.display = "none";
-        flashViewport.style.display = "flex";
-        flashStage.style.transform = "scale(1)";
-        flashStage.style.width = "800px";
-        flashStage.style.height = "600px";
+        ruffleContainer.style.display = "block";
 
         const ruffle = window.RufflePlayer.newest();
         const player = ruffle.createPlayer();
 
-        player.style.width = "800px";
-        player.style.height = "600px";
-        player.style.display = "block";
+        player.style.width = "100%";
+        player.style.height = "100%";
 
         ruffleContainer.appendChild(player);
-        currentFlashPlayer = player;
         player.load(url);
 
+        gameShell.style.transform = "scale(1)";
         requestAnimationFrame(updateFlashScale);
     } else {
         currentMode = "html";
+        viewer.classList.add("html-mode");
+
         gameShell.classList.remove("flash-shell");
         gameShell.classList.add("html-shell");
 
-        flashViewport.style.display = "none";
+        ruffleContainer.style.display = "none";
         frame.style.display = "block";
+        gameShell.style.transform = "none";
         frame.src = url;
     }
+
+    viewer.style.display = "flex";
 }
 
 function closeGame() {
@@ -717,7 +686,8 @@ function closeGame() {
     clearViewerContent();
 
     frame.style.display = "block";
-    flashViewport.style.display = "none";
+    ruffleContainer.style.display = "none";
+    gameShell.style.transform = "none";
     gameShell.classList.remove("flash-shell");
     gameShell.classList.add("html-shell");
 
