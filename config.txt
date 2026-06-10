@@ -52,3 +52,7 @@ img|https://image.winudf.com/v2/image1/aW8udm9vZG9vLnBhcGVyaW9fc2NyZWVuXzExXzE1N
 url|https://freewebgames.github.io/Paper.io.html
 cat|Survival, Action
 input|all
+
+title|Test
+url|https://freewebgames.github.io/bloons-tower-defense-5.swf
+desc|Test
