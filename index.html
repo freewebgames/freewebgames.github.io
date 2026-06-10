@@ -302,19 +302,49 @@ body{
     background:#0b1118;
     display:none;
     z-index:20;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    overflow:auto;
 }
 
-.viewer iframe{
+.game-shell{
+    width:100%;
+    height:100%;
+    border:1px solid rgba(255,255,255,.95);
+    border-radius:12px;
+    overflow:hidden;
+    background:#000;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+
+.game-shell.flash{
+    width:min(800px, calc(100vw - 40px));
+    height:min(600px, calc(100vh - 112px));
+    flex:0 0 auto;
+}
+
+.game-shell iframe{
     width:100%;
     height:100%;
     border:none;
+    display:block;
     background:#000;
+    border-radius:inherit;
 }
 
 #ruffleContainer{
     width:100%;
     height:100%;
     display:none;
+    border-radius:inherit;
+}
+
+#ruffleContainer > *{
+    width:100%;
+    height:100%;
+    display:block;
+    border-radius:inherit;
 }
 
 .empty-state{
@@ -382,8 +412,10 @@ body{
 </div>
 
 <div class="viewer" id="viewer">
-    <iframe id="gameFrame" title="Game frame"></iframe>
-    <div id="ruffleContainer"></div>
+    <div id="gameShell" class="game-shell">
+        <iframe id="gameFrame" title="Game frame"></iframe>
+        <div id="ruffleContainer"></div>
+    </div>
 </div>
 
 <script>
@@ -394,6 +426,7 @@ const grid = document.getElementById("gamesGrid");
 const catList = document.getElementById("catList");
 const searchBox = document.getElementById("searchBox");
 const viewer = document.getElementById("viewer");
+const gameShell = document.getElementById("gameShell");
 const frame = document.getElementById("gameFrame");
 const ruffleContainer = document.getElementById("ruffleContainer");
 const logoText = document.getElementById("logoText");
@@ -584,7 +617,7 @@ function isFlashGame(url) {
 }
 
 function openGame(url, title) {
-    viewer.style.display = "block";
+    viewer.style.display = "flex";
     homeButton.style.display = "block";
     logoText.textContent = `Free Web Games | ${title}`;
 
@@ -592,8 +625,10 @@ function openGame(url, title) {
     ruffleContainer.innerHTML = "";
     frame.style.display = "none";
     ruffleContainer.style.display = "none";
+    gameShell.classList.remove("flash");
 
     if (isFlashGame(url) && window.RufflePlayer) {
+        gameShell.classList.add("flash");
         ruffleContainer.style.display = "block";
 
         const ruffle = window.RufflePlayer.newest();
@@ -616,6 +651,7 @@ function closeGame() {
     ruffleContainer.innerHTML = "";
     frame.style.display = "block";
     ruffleContainer.style.display = "none";
+    gameShell.classList.remove("flash");
     homeButton.style.display = "none";
     logoText.textContent = "Free Web Games";
 }
