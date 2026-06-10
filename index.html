@@ -23,6 +23,9 @@
     --green2:#588a1b;
     --orange1:#d68a2f;
     --orange2:#a8651d;
+    --viewer-border:#ffffff;
+    --viewer-radius:4px;
+    --viewer-border-width:4px;
 }
 
 *{
@@ -308,23 +311,22 @@ body{
     overflow:auto;
 }
 
+/* Shared frame treatment */
 .game-shell{
-    width:100%;
-    height:100%;
-    border:1px solid rgba(255,255,255,.95);
-    border-radius:12px;
-    overflow:hidden;
+    border:var(--viewer-border-width) solid var(--viewer-border);
+    border-radius:var(--viewer-radius);
     background:#000;
     box-shadow:0 10px 30px rgba(0,0,0,.45);
+    overflow:hidden;
 }
 
-.game-shell.flash{
-    width:min(800px, calc(100vw - 40px));
-    height:min(600px, calc(100vh - 112px));
-    flex:0 0 auto;
+/* HTML games: use all available space */
+.game-shell.html-shell{
+    width:100%;
+    height:100%;
 }
 
-.game-shell iframe{
+.game-shell.html-shell iframe{
     width:100%;
     height:100%;
     border:none;
@@ -333,17 +335,44 @@ body{
     border-radius:inherit;
 }
 
-#ruffleContainer{
+/* Flash games: fixed 800x600 content, scaled to fit available space */
+.game-shell.flash-shell{
     width:100%;
     height:100%;
-    display:none;
-    border-radius:inherit;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-#ruffleContainer > *{
+.flash-viewport{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.flash-stage{
+    width:800px;
+    height:600px;
+    transform-origin:center center;
+    will-change:transform;
+    flex:0 0 auto;
+}
+
+.flash-stage > *{
     width:100%;
     height:100%;
     display:block;
+    border:none;
+    border-radius:inherit;
+    background:#000;
+}
+
+#ruffleContainer{
+    width:100%;
+    height:100%;
     border-radius:inherit;
 }
 
@@ -412,9 +441,14 @@ body{
 </div>
 
 <div class="viewer" id="viewer">
-    <div id="gameShell" class="game-shell">
+    <div id="gameShell" class="game-shell html-shell">
         <iframe id="gameFrame" title="Game frame"></iframe>
-        <div id="ruffleContainer"></div>
+
+        <div class="flash-viewport" id="flashViewport" style="display:none;">
+            <div class="flash-stage" id="flashStage">
+                <div id="ruffleContainer"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -428,10 +462,15 @@ const searchBox = document.getElementById("searchBox");
 const viewer = document.getElementById("viewer");
 const gameShell = document.getElementById("gameShell");
 const frame = document.getElementById("gameFrame");
+const flashViewport = document.getElementById("flashViewport");
+const flashStage = document.getElementById("flashStage");
 const ruffleContainer = document.getElementById("ruffleContainer");
 const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
+
+let currentMode = "html";
+let currentFlashPlayer = null;
 
 function parseConfig(text) {
     const blocks = text
@@ -616,30 +655,58 @@ function isFlashGame(url) {
     return /\.swf(\?|#|$)/i.test(url);
 }
 
+function clearViewerContent() {
+    frame.src = "";
+    ruffleContainer.innerHTML = "";
+    currentFlashPlayer = null;
+}
+
+function updateFlashScale() {
+    if (currentMode !== "flash") return;
+
+    const availW = flashViewport.clientWidth;
+    const availH = flashViewport.clientHeight;
+
+    const scale = Math.min(availW / 800, availH / 600);
+    flashStage.style.transform = `scale(${scale})`;
+}
+
 function openGame(url, title) {
     viewer.style.display = "flex";
     homeButton.style.display = "block";
     logoText.textContent = `Free Web Games | ${title}`;
 
-    frame.src = "";
-    ruffleContainer.innerHTML = "";
-    frame.style.display = "none";
-    ruffleContainer.style.display = "none";
-    gameShell.classList.remove("flash");
+    clearViewerContent();
 
     if (isFlashGame(url) && window.RufflePlayer) {
-        gameShell.classList.add("flash");
-        ruffleContainer.style.display = "block";
+        currentMode = "flash";
+        gameShell.classList.remove("html-shell");
+        gameShell.classList.add("flash-shell");
+
+        frame.style.display = "none";
+        flashViewport.style.display = "flex";
+        flashStage.style.transform = "scale(1)";
+        flashStage.style.width = "800px";
+        flashStage.style.height = "600px";
 
         const ruffle = window.RufflePlayer.newest();
         const player = ruffle.createPlayer();
 
-        player.style.width = "100%";
-        player.style.height = "100%";
+        player.style.width = "800px";
+        player.style.height = "600px";
+        player.style.display = "block";
 
         ruffleContainer.appendChild(player);
+        currentFlashPlayer = player;
         player.load(url);
+
+        requestAnimationFrame(updateFlashScale);
     } else {
+        currentMode = "html";
+        gameShell.classList.remove("flash-shell");
+        gameShell.classList.add("html-shell");
+
+        flashViewport.style.display = "none";
         frame.style.display = "block";
         frame.src = url;
     }
@@ -647,13 +714,16 @@ function openGame(url, title) {
 
 function closeGame() {
     viewer.style.display = "none";
-    frame.src = "";
-    ruffleContainer.innerHTML = "";
+    clearViewerContent();
+
     frame.style.display = "block";
-    ruffleContainer.style.display = "none";
-    gameShell.classList.remove("flash");
+    flashViewport.style.display = "none";
+    gameShell.classList.remove("flash-shell");
+    gameShell.classList.add("html-shell");
+
     homeButton.style.display = "none";
     logoText.textContent = "Free Web Games";
+    currentMode = "html";
 }
 
 homeButton.addEventListener("click", closeGame);
@@ -664,6 +734,8 @@ allCatButton.addEventListener("click", () => {
     setActiveCategory("all");
     renderGames();
 });
+
+window.addEventListener("resize", updateFlashScale);
 
 async function loadConfig() {
     try {
