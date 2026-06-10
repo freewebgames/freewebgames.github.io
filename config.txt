@@ -11,7 +11,7 @@ title|Undertale
 desc|A story-driven RPG where choices matter and combat can be avoided.
 img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg
 url|https://freewebgames.github.io/undertale/index.html
-cat|RPG, Story, Indie
+cat|RPG, Story, Indie, Action
 input|keyboard
 creator_name|Toby Fox
 creator_url|https://store.steampowered.com/app/391540/Undertale/
@@ -30,4 +30,11 @@ desc|Eggy Car is a fun driving game where you cruise over bumpy hills and tricky
 img|https://assets.funnygames.se/9/113739/96341/1344x896/eggy-car.jpg
 url|https://freewebgames.github.io/Eggy%20Car.html
 cat|Physics, Endless
+input|keyboard, touch
+
+title|Moto X3M 3
+desc|Moto X3M 3 is the third entry in the Moto X3M series, delivering high-speed motorcycle stunt action as you race through wild obstacle courses, pull off flips, and push for the fastest times.
+img|https://i.ytimg.com/vi/TdJiJkpiSOA/maxresdefault.jpg
+url|https://freewebgames.github.io/Moto%20X3M%203.html
+cat|Racing, Physics, Action
 input|keyboard, touch
