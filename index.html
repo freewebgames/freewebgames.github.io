@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Free Web Games</title>
 
-<!-- Ruffle (Flash emulator) -->
+<!-- Adobe Flash support via Ruffle -->
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 
 <style>
@@ -25,8 +25,16 @@
     --orange2:#a8651d;
 }
 
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    height:100%;
+}
+
 body{
     background:var(--bg);
     color:var(--text);
@@ -34,7 +42,6 @@ body{
     overflow:hidden;
 }
 
-/* Topbar */
 .topbar{
     height:72px;
     background:linear-gradient(to bottom, var(--panel3), #171d25);
@@ -51,6 +58,10 @@ body{
     font-size:1.9rem;
     font-weight:700;
     color:#fff;
+    letter-spacing:.2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .back-button{
@@ -62,22 +73,34 @@ body{
     border-radius:6px;
     font-weight:700;
     cursor:pointer;
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
 }
 
-/* Layout */
-.main{display:flex;height:calc(100vh - 72px);}
+.back-button:hover{
+    filter:brightness(1.08);
+}
+
+.main{
+    display:flex;
+    height:calc(100vh - 72px);
+    min-height:0;
+}
+
 .sidebar{
     width:260px;
     background:var(--panel);
     padding:20px;
     border-right:1px solid var(--line);
     overflow-y:auto;
+    min-height:0;
 }
+
 .sidebar h2{
     font-size:.85rem;
     color:var(--accent);
     margin-bottom:12px;
     text-transform:uppercase;
+    letter-spacing:1px;
 }
 
 .cat{
@@ -88,96 +111,251 @@ body{
     border-radius:6px;
     margin-bottom:4px;
     cursor:pointer;
+    user-select:none;
+    transition:background .15s ease, color .15s ease;
 }
-.cat:hover,.cat.active{background:#2a475e;color:#fff;}
+
+.cat:hover,
+.cat.active{
+    background:#2a475e;
+    color:#fff;
+}
 
 .content{
     flex:1;
+    min-width:0;
     overflow-y:auto;
     padding:30px;
+    min-height:0;
 }
 
 .header-row{
     display:flex;
+    align-items:center;
     justify-content:space-between;
+    gap:16px;
     margin-bottom:24px;
 }
 
-.library-title{font-size:2rem;color:#fff;}
-.search{
-    width:320px;
-    background:#316282;
-    border:none;
-    padding:10px 14px;
-    border-radius:4px;
+.library-title{
+    font-size:2rem;
+    font-weight:700;
     color:#fff;
 }
 
-/* Grid */
+.search{
+    width:min(320px, 100%);
+    border:none;
+    outline:none;
+    background:#316282;
+    color:#fff;
+    padding:10px 14px;
+    border-radius:4px;
+    font-size:1rem;
+}
+
+.search::placeholder{
+    color:#d6e8f3;
+}
+
 .games-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(420px, 1fr));
     gap:22px;
+    align-items:start;
 }
 
 .game-card{
     background:var(--panel2);
+    border:1px solid rgba(0,0,0,.35);
     border-radius:10px;
     overflow:hidden;
+    transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+    cursor:default;
+}
+
+.game-card:hover{
+    transform:translateY(-4px);
+    background:#1d2c3d;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
 }
 
 .game-image{
     width:100%;
     height:220px;
     object-fit:cover;
+    display:block;
     background:#000;
 }
 
-.game-info{padding:16px;}
-.game-title{color:#fff;font-size:1.2rem;font-weight:700;}
+.game-info{
+    padding:16px;
+}
 
-.game-desc{color:var(--muted);margin:10px 0;}
+.game-toprow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    margin-bottom:8px;
+}
 
-.play-button{
-    background:linear-gradient(to bottom, var(--green1), var(--green2));
+.game-title{
+    font-size:1.25rem;
+    color:#fff;
+    font-weight:700;
+    line-height:1.2;
+    min-width:0;
+}
+
+.input-badge{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:#b8c7d6;
+    font-size:.88rem;
+    white-space:nowrap;
+}
+
+.input-icons{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    line-height:1;
+}
+
+.input-icons svg{
+    width:15px;
+    height:15px;
+    display:block;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.game-desc{
+    color:var(--muted);
+    font-size:.95rem;
+    line-height:1.45;
+    margin-bottom:14px;
+}
+
+.action-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+}
+
+.play-button,
+.support-button{
     border:none;
     color:#fff;
     padding:10px 18px;
     border-radius:4px;
+    font-weight:700;
     cursor:pointer;
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+    min-height:38px;
 }
 
-/* Viewer */
+.play-button{
+    background:linear-gradient(to bottom, var(--green1), var(--green2));
+}
+
+.play-button:hover{
+    filter:brightness(1.08);
+}
+
+.support-button{
+    background:linear-gradient(to bottom, var(--orange1), var(--orange2));
+}
+
+.support-button:hover{
+    filter:brightness(1.08);
+}
+
+.footer{
+    margin-top:30px;
+    text-align:center;
+    color:#6b7a88;
+    font-size:.9rem;
+    padding-bottom:10px;
+}
+
 .viewer{
     position:fixed;
     inset:72px 0 0 0;
-    background:#000;
+    background:#0b1118;
     display:none;
     z-index:20;
 }
 
-/* iframe games */
 .viewer iframe{
     width:100%;
     height:100%;
     border:none;
+    background:#000;
 }
 
-/* Ruffle container */
 #ruffleContainer{
     width:100%;
     height:100%;
+    display:none;
 }
 
-/* Mobile */
-@media (max-width:900px){
-    .sidebar{display:none;}
-    .games-grid{grid-template-columns:1fr;}
-    .search{width:100%;}
+.empty-state{
+    color:#8f98a0;
+    padding:18px 4px;
+    font-size:1rem;
+}
+
+@media (max-width: 900px){
+    .sidebar{
+        display:none;
+    }
+
+    .content{
+        padding:20px;
+    }
+
+    .header-row{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .search{
+        width:100%;
+    }
+
+    .games-grid{
+        grid-template-columns:1fr;
+    }
+
+    .game-toprow{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .input-badge{
+        width:fit-content;
+    }
 }
 </style>
 </head>
-
 <body>
 
 <div class="topbar">
@@ -195,16 +373,16 @@ body{
     <section class="content">
         <div class="header-row">
             <div class="library-title">Game Library</div>
-            <input id="searchBox" class="search" placeholder="Search games..." />
+            <input id="searchBox" class="search" type="text" placeholder="Search games..." />
         </div>
 
         <div id="gamesGrid" class="games-grid"></div>
+        <div class="footer">Free Web Games © 2026</div>
     </section>
 </div>
 
-<!-- Viewer -->
 <div class="viewer" id="viewer">
-    <iframe id="gameFrame"></iframe>
+    <iframe id="gameFrame" title="Game frame"></iframe>
     <div id="ruffleContainer"></div>
 </div>
 
@@ -220,26 +398,202 @@ const frame = document.getElementById("gameFrame");
 const ruffleContainer = document.getElementById("ruffleContainer");
 const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
+const allCatButton = document.querySelector('.cat[data-cat="all"]');
 
-function isSWF(url){
-    return url.toLowerCase().includes(".swf");
+function parseConfig(text) {
+    const blocks = text
+        .trim()
+        .split(/\n\s*\n/)
+        .filter(Boolean);
+
+    return blocks.map(block => {
+        const obj = {};
+
+        block.split("\n").forEach(line => {
+            const idx = line.indexOf("|");
+            if (idx === -1) return;
+
+            const key = line.slice(0, idx).trim().toLowerCase();
+            const value = line.slice(idx + 1).trim();
+            obj[key] = value;
+        });
+
+        obj.cat = (obj.cat || "")
+            .split(",")
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        obj.input = (obj.input || "keyboard+mouse").trim().toLowerCase();
+        obj.creator_name = (obj.creator_name || "").trim();
+        obj.creator_url = (obj.creator_url || "").trim();
+
+        return obj;
+    }).filter(g => g.title && g.url);
 }
 
-function clearViewer(){
-    frame.style.display = "none";
-    ruffleContainer.innerHTML = "";
-    ruffleContainer.style.display = "none";
+function iconSVG(kind) {
+    const common = `stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true" focusable="false"`;
+    if (kind === "keyboard") {
+        return `<svg ${common}><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M6 10h0M9 10h0M12 10h0M15 10h0M18 10h0M6 14h12"></path></svg>`;
+    }
+    if (kind === "mouse") {
+        return `<svg ${common}><path d="M12 3c3 0 5 2 5 5v8c0 3-2 5-5 5s-5-2-5-5V8c0-3 2-5 5-5z"></path><path d="M12 7v4"></path></svg>`;
+    }
+    if (kind === "touch") {
+        return `<svg ${common}><path d="M8 11.5V7.5a1.5 1.5 0 0 1 3 0V12"></path><path d="M11 12V6.8a1.2 1.2 0 0 1 2.4 0V12"></path><path d="M13.4 12V8a1.1 1.1 0 0 1 2.2 0v4"></path><path d="M15.6 12V9.2a1 1 0 0 1 2 0V15c0 3-2 5-5 5h-1.5c-2.8 0-4.1-1.2-5.2-3.2L5 15.3"></path></svg>`;
+    }
+    return `<svg ${common}><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>`;
 }
 
-function openGame(url, title){
+function inputMeta(type) {
+    const map = {
+        keyboard: {
+            label: "keyboard",
+            icons: ["keyboard"]
+        },
+        mouse: {
+            label: "mouse",
+            icons: ["mouse"]
+        },
+        touch: {
+            label: "touch",
+            icons: ["touch"]
+        },
+        "keyboard+mouse": {
+            label: "keyboard and mouse",
+            icons: ["keyboard", "mouse"]
+        },
+        "keyboard+touch": {
+            label: "keyboard and touch",
+            icons: ["keyboard", "touch"]
+        },
+        "mouse+touch": {
+            label: "mouse and touch",
+            icons: ["mouse", "touch"]
+        },
+        all: {
+            label: "keyboard, mouse, and touch",
+            icons: ["keyboard", "mouse", "touch"]
+        }
+    };
+
+    return map[type] || {
+        label: type || "unknown",
+        icons: ["touch"]
+    };
+}
+
+function uniqueCategories() {
+    return [...new Set(games.flatMap(g => Array.isArray(g.cat) ? g.cat : []))];
+}
+
+function gameMatchesCategory(game, category) {
+    if (category === "all") return true;
+    return Array.isArray(game.cat) && game.cat.includes(category);
+}
+
+function gameMatchesSearch(game, term) {
+    if (!term) return true;
+    const title = (game.title || "").toLowerCase();
+    const desc = (game.desc || "").toLowerCase();
+    return title.includes(term) || desc.includes(term);
+}
+
+function setActiveCategory(category) {
+    document.querySelectorAll(".cat").forEach(el => el.classList.remove("active"));
+    const active = document.querySelector(`.cat[data-cat="${category}"]`);
+    if (active) active.classList.add("active");
+}
+
+function renderCategories() {
+    catList.innerHTML = "";
+
+    uniqueCategories().forEach(category => {
+        const a = document.createElement("a");
+        a.className = "cat";
+        a.dataset.cat = category;
+        a.textContent = category;
+        a.addEventListener("click", () => {
+            currentCategory = category;
+            setActiveCategory(category);
+            renderGames();
+        });
+        catList.appendChild(a);
+    });
+}
+
+function renderGames() {
+    const term = searchBox.value.trim().toLowerCase();
+    grid.innerHTML = "";
+
+    const filtered = games.filter(g =>
+        gameMatchesCategory(g, currentCategory) &&
+        gameMatchesSearch(g, term)
+    );
+
+    if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No games match the current filter.";
+        grid.appendChild(empty);
+        return;
+    }
+
+    filtered.forEach(g => {
+        const meta = inputMeta(g.input);
+
+        const card = document.createElement("div");
+        card.className = "game-card";
+
+        const supportButtonHTML = g.creator_url
+            ? `<a class="support-button" href="${g.creator_url}" target="_blank" rel="noopener noreferrer">
+                   Support ${g.creator_name ? g.creator_name : "Creator"}
+               </a>`
+            : "";
+
+        card.innerHTML = `
+            <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
+            <div class="game-info">
+                <div class="game-toprow">
+                    <div class="game-title">${g.title || ""}</div>
+                    <div class="input-badge" title="${meta.label}">
+                        <span class="input-icons" aria-hidden="true">
+                            ${meta.icons.map(i => iconSVG(i)).join("")}
+                        </span>
+                        <span>${meta.label}</span>
+                    </div>
+                </div>
+                <div class="game-desc">${g.desc || ""}</div>
+                <div class="action-row">
+                    <button class="play-button" type="button">Play</button>
+                    ${supportButtonHTML}
+                </div>
+            </div>
+        `;
+
+        card.querySelector(".play-button").addEventListener("click", () => {
+            openGame(g.url, g.title || "Game");
+        });
+
+        grid.appendChild(card);
+    });
+}
+
+function isFlashGame(url) {
+    return /\.swf(\?|#|$)/i.test(url);
+}
+
+function openGame(url, title) {
     viewer.style.display = "block";
     homeButton.style.display = "block";
     logoText.textContent = `Free Web Games | ${title}`;
 
-    clearViewer();
+    frame.src = "";
+    ruffleContainer.innerHTML = "";
+    frame.style.display = "none";
+    ruffleContainer.style.display = "none";
 
-    if(isSWF(url)){
-        // FLASH GAME VIA RUFFLE
+    if (isFlashGame(url) && window.RufflePlayer) {
         ruffleContainer.style.display = "block";
 
         const ruffle = window.RufflePlayer.newest();
@@ -251,66 +605,51 @@ function openGame(url, title){
         ruffleContainer.appendChild(player);
         player.load(url);
     } else {
-        // NORMAL WEB GAME
         frame.style.display = "block";
         frame.src = url;
     }
 }
 
-function closeGame(){
+function closeGame() {
     viewer.style.display = "none";
     frame.src = "";
-    clearViewer();
+    ruffleContainer.innerHTML = "";
+    frame.style.display = "block";
+    ruffleContainer.style.display = "none";
     homeButton.style.display = "none";
     logoText.textContent = "Free Web Games";
 }
 
-/* Config parsing */
-function parseConfig(text){
-    return text.trim().split(/\n\s*\n/).map(block=>{
-        const obj = {};
-        block.split("\n").forEach(line=>{
-            const i=line.indexOf("|");
-            if(i===-1)return;
-            obj[line.slice(0,i).trim().toLowerCase()] = line.slice(i+1).trim();
-        });
-        return obj;
-    }).filter(g=>g.title && g.url);
-}
+homeButton.addEventListener("click", closeGame);
+searchBox.addEventListener("input", renderGames);
 
-function renderGames(){
-    const term = searchBox.value.toLowerCase();
-    grid.innerHTML = "";
+allCatButton.addEventListener("click", () => {
+    currentCategory = "all";
+    setActiveCategory("all");
+    renderGames();
+});
 
-    games
-    .filter(g => g.title.toLowerCase().includes(term))
-    .forEach(g=>{
-        const card = document.createElement("div");
-        card.className="game-card";
+async function loadConfig() {
+    try {
+        const res = await fetch("config.txt", { cache: "no-store" });
+        if (!res.ok) throw new Error(`config.txt load failed: ${res.status}`);
 
-        card.innerHTML = `
-            <img class="game-image" src="${g.img||""}">
-            <div class="game-info">
-                <div class="game-title">${g.title}</div>
-                <div class="game-desc">${g.desc||""}</div>
-                <button class="play-button">Play</button>
+        const text = await res.text();
+        games = parseConfig(text);
+
+        renderCategories();
+        renderGames();
+    } catch (err) {
+        console.error(err);
+        grid.innerHTML = `
+            <div class="empty-state">
+                Could not load config.txt.
             </div>
         `;
-
-        card.querySelector("button").onclick=()=>openGame(g.url,g.title);
-        grid.appendChild(card);
-    });
+    }
 }
 
-homeButton.onclick=closeGame;
-searchBox.oninput=renderGames;
-
-async function load(){
-    const res = await fetch("config.txt");
-    games = parseConfig(await res.text());
-    renderGames();
-}
-load();
+loadConfig();
 </script>
 
 </body>
