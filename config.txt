@@ -21,7 +21,7 @@ desc|An incremental idle game about clicking cookies and building an absurd prod
 img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1454400/header.jpg
 url|https://freewebgames.github.io/cookie-clicker/index.html
 cat|Simulation, Story, Indie, Endless
-input|all
+input|mouse+touch
 creator_name|Orteil
 creator_url|https://store.steampowered.com/app/1454400/Cookie_Clicker/
 
@@ -37,4 +37,4 @@ desc|Moto X3M 3 is the third entry in the Moto X3M series, delivering high-speed
 img|https://i.ytimg.com/vi/TdJiJkpiSOA/maxresdefault.jpg
 url|https://freewebgames.github.io/Moto%20X3M%203.html
 cat|Racing, Physics, Action
-input|keyboard, touch
+input|keyboard
