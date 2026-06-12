@@ -59,3 +59,5 @@ img|https://assets1.ignimgs.com/2015/07/01/btd5blogrolljpg-9c6c14_1280w.jpg
 url|https://freewebgames.github.io/Flash/bloons-tower-defense-5.swf
 cat|Tower Defense, Strategy
 input|all
+creator_name|Ninja Kiwi
+creator_url|https://store.steampowered.com/app/306020/Bloons_TD_5/
