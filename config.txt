@@ -1,6 +1,6 @@
 title|Balatro
 desc|Poker roguelike deckbuilder with powerful synergies and endless runs. Does not work on iOS or iPadOS :/
-img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2379780/7a85430784e4d613cdb0547414d8cf16ffa45747/header.jpg
+img|https://freewebgames.github.io/Assets/Balatro.jpg
 url|https://freewebgames.github.io/balatro/index.html
 cat|Card Games, Roguelike, Indie, Endless
 input|mouse+touch
@@ -9,7 +9,7 @@ creator_url|https://store.steampowered.com/app/2379780/Balatro/
 
 title|Undertale
 desc|A story-driven RPG where choices matter and combat can be avoided.
-img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg
+img|https://freewebgames.github.io/Assets/Undertale.jpg
 url|https://freewebgames.github.io/undertale/index.html
 cat|RPG, Story, Indie, Action
 input|keyboard
@@ -18,7 +18,7 @@ creator_url|https://store.steampowered.com/app/391540/Undertale/
 
 title|Cookie Clicker
 desc|An incremental idle game about clicking cookies and building an absurd production empire.
-img|https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1454400/header.jpg
+img|https://freewebgames.github.io/Assets/CookieClicker.jpg
 url|https://freewebgames.github.io/cookie-clicker/index.html
 cat|Simulation, Story, Indie, Endless
 input|mouse+touch
@@ -27,35 +27,35 @@ creator_url|https://store.steampowered.com/app/1454400/Cookie_Clicker/
 
 title|Eggy Car
 desc|Eggy Car is a fun driving game where you cruise over bumpy hills and tricky terrain while trying to keep a fragile egg balanced on top of your car.
-img|https://assets.funnygames.se/9/113739/96341/1344x896/eggy-car.jpg
+img|https://freewebgames.github.io/Assets/EggyCar.jpg
 url|https://freewebgames.github.io/HTML/Eggy%20Car.html
 cat|Physics, Endless
 input|all
 
 title|Moto X3M 3
 desc|Moto X3M 3 is the third entry in the Moto X3M series, delivering high-speed motorcycle stunt action as you race through wild obstacle courses, pull off flips, and push for the fastest times.
-img|https://i.ytimg.com/vi/TdJiJkpiSOA/maxresdefault.jpg
+img|https://freewebgames.github.io/Assets/MotoX3M3.jpg
 url|https://freewebgames.github.io/HTML/Moto%20X3M%203.html
 cat|Racing, Physics, Action
 input|keyboard
 
 title|Idle Breakout
 desc|Idle Breakout is an incremental arcade game where you break layers of bricks by upgrading and spawning bouncing balls that automatically smash through the grid and steadily scale your damage over time.
-img|https://www.coolmathgames.com/sites/default/files/IdleBreakout_OG-logo.jpg
+img|https://freewebgames.github.io/Assets/IdleBreakout.jpg
 url|https://freewebgames.github.io/HTML/idlebreakout.html
 cat|idle, Physics, Tycoon
 input|mouse+touch
 
 title|Paper.io
 desc|Paper.io is a competitive territory-capture game where you expand your area by drawing loops, outmaneuvering opponents, and avoiding collisions to dominate the map.
-img|https://image.winudf.com/v2/image1/aW8udm9vZG9vLnBhcGVyaW9fc2NyZWVuXzExXzE1NDIxMzU5NzBfMDk4/screen-11.jpg?fakeurl=1&type=.jpg
+img|https://freewebgames.github.io/Assets/Paperio.jpg
 url|https://freewebgames.github.io/HTML/Paper.io.html
 cat|Survival, Action
 input|all
 
 title|Bloons TD 5
 desc|Bloons TD 5 is a classic tower defense game where you deploy powerful monkey towers, unlock upgrades, and stop endless waves of colorful bloons from reaching the end of the track.
-img|https://assets1.ignimgs.com/2015/07/01/btd5blogrolljpg-9c6c14_1280w.jpg
+img|https://freewebgames.github.io/Assets/BloonsTD5.jpg
 url|https://freewebgames.github.io/Flash/bloons-tower-defense-5.swf
 cat|Tower Defense, Strategy
 input|mouse+touch
@@ -64,28 +64,28 @@ creator_url|https://store.steampowered.com/app/306020/Bloons_TD_5/
 
 title|Duck Life
 desc|Train a duck across running, swimming, and flying challenges, then compete in races to earn money and unlock upgrades that improve performance.
-img|https://www.coolmathgames.com/sites/default/files/DuckLife_OG-logo.jpg
+img|https://freewebgames.github.io/Assets/DuckLife.jpg
 url|https://freewebgames.github.io/Flash/529535_ducklife.swf
 cat|Racing, Simulation, Training, Arcade
 input|all
 
 title|Duck Life 2
 desc|Build and train a duck through multiple skill-based mini-games, then enter races where improved stats determine your success.
-img|https://www.coolmathgames.com/sites/default/files/DuckLife2_OG-logo.jpg
+img|https://freewebgames.github.io/Assets/DuckLife2.jpg
 url|https://freewebgames.github.io/Flash/542198_DuckLife2b.swf
 cat|Racing, Simulation, Training, Arcade
 input|all
 
 title|Duck Life 3
 desc|Compete in structured racing tournaments while training a duck across different environments and upgrading abilities between events.
-img|https://www.coolmathgames.com/sites/default/files/DuckLife3_OG-logo.jpg
+img|https://freewebgames.github.io/Assets/DuckLife3.jpg
 url|https://freewebgames.github.io/Flash/570338_DuckLife3.swf
 cat|Racing, Simulation, Training, Arcade
 input|all
 
 title|Duck Life 4
 desc|Explore a world map while training skills through mini-games and entering races across different regions to earn rewards and progress.
-img|https://www.coolmathgames.com/sites/default/files/DuckLife4_OG-logo.jpg
+img|https://freewebgames.github.io/Assets/DuckLife4.jpg
 url|https://freewebgames.github.io/Flash/duck-life-4.swf
 cat|Racing, Simulation, Training, Arcade
 input|all
@@ -99,7 +99,7 @@ input|mouse+touch
 
 title|Age of War 2
 desc|Manage resources and deploy units across evolving eras, balancing offense and defense to destroy the opposing base.
-img|https://i.ytimg.com/vi/glYH0k5pFx8/maxresdefault.jpg
+img|https://freewebgames.github.io/Assets/AgeofWar2.jpg
 url|https://freewebgames.github.io/Flash/age-of-war-2-publicOTM3.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
@@ -113,35 +113,35 @@ input|mouse+touch
 
 title|Learn to Fly
 desc|Launch a penguin and use earned upgrades to increase distance, improve momentum, and gradually achieve longer airborne runs.
-img|https://www.coolmathgames.com/sites/default/files/LearntoFly_OG-logo.jpg
+img|https://freewebgames.github.io/Assets/LearntoFly.jpg
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly.swf
 cat|Arcade, Launch, Physics
 input|all
 
 title|Learn to Fly 2
 desc|Use improved launch mechanics and upgrade systems to send a penguin farther through controlled flights and incremental enhancements.
-img|https://www.hahagames.com/_next/image?url=https:%2F%2Fstatic.hahagames.com%2Fmedia%2F636f25cc-d189-40ad-bc3c-a519e1692da1%2F5d7aa7f1-eccd-45d9-ae2d-3926d090aa31.png&w=3840&q=75
+img|https://freewebgames.github.io/Assets/LearntoFly2.png
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly%202.swf
 cat|Arcade, Launch, Physics
 input|all
 
 title|Learn to Fly 3
 desc|Upgrade experimental launch equipment to propel a penguin through increasingly advanced stages with extended flight objectives.
-img|https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/589870/capsule_616x353.jpg?t=1643409029
+img|https://freewebgames.github.io/Assets/LearntoFly3.jpg
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly%203.swf
 cat|Arcade, Launch, Physics
 input|all
 
 title|The Impossible Quiz
 desc|Answer a series of deceptive and unconventional questions where logic is often misleading and creative interpretation is required.
-img|https://dash.gamestores.fun/uploads/og_The_Impossible_Quiz_3a546abc94.png
+img|https://freewebgames.github.io/Assets/TheImpossibleQuiz.png
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz.swf
 cat|Puzzle, Humor
 input|mouse+touch
 
 title|The Impossible Quiz 2
 desc|Solve increasingly unpredictable quiz challenges filled with trick answers, hidden rules, and unconventional logic puzzles.
-img|https://i.ytimg.com/vi/vNLVz_BNUZY/maxresdefault.jpg
+img|https://freewebgames.github.io/Assets/TheImpossibleQuiz2.jpg
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz%202.swf
 cat|Puzzle, Humor
 input|mouse+touch
