@@ -6,4 +6,3 @@ Thank you for wanting to contribute. If you do the steps below, there is a high 
 1. Make a pull request with the file in the folder HTML or Flash (depending on type)
 2. Place an image in the Assets folder (if you can find one!)
 3. Add a config.txt entry in the correct format.
-That's all!
