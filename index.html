@@ -256,6 +256,10 @@ body{
     display:inline-flex;
 }
 
+.mobile-header-dock{
+    display:none;
+}
+
 .games-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(420px, 1fr));
@@ -524,26 +528,32 @@ body{
     }
 
     .header-row{
-        display:block;
-        position:static;
-        margin-bottom:18px;
-        background:transparent;
-        padding:18px 0 0;
+        display:none;
     }
 
-    .library-title{
+    .mobile-header-dock{
         display:block;
-        font-size:1.55rem;
-        margin-bottom:12px;
-    }
-
-    .search-wrap{
-        width:100%;
         position:sticky;
         top:0;
         z-index:25;
         background:var(--bg);
-        padding:0 0 12px;
+        padding:12px 0 12px;
+        margin-bottom:14px;
+    }
+
+    .mobile-header-title{
+        display:block;
+        font-size:1.55rem;
+        font-weight:700;
+        color:#fff;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        margin-bottom:10px;
+    }
+
+    .mobile-header-dock .search-wrap{
+        width:100%;
     }
 
     .games-grid{
@@ -586,12 +596,16 @@ body{
     </aside>
 
     <section class="content">
-        <div class="header-row">
+        <div class="header-row" id="desktopHeaderRow">
             <div class="library-title">Game Library</div>
             <div class="search-wrap" id="searchWrap">
                 <input id="searchBox" class="search" type="text" placeholder="Search games..." />
                 <button id="searchClear" class="search-clear" type="button" aria-label="Clear search">×</button>
             </div>
+        </div>
+
+        <div class="mobile-header-dock" id="mobileHeaderDock">
+            <div class="mobile-header-title">Game Library</div>
         </div>
 
         <div id="gamesGrid" class="games-grid"></div>
@@ -611,6 +625,7 @@ body{
 <script>
 let games = [];
 let currentCategory = "all";
+let currentGameTitle = "";
 
 const grid = document.getElementById("gamesGrid");
 const catList = document.getElementById("catList");
@@ -626,6 +641,8 @@ const homeButton = document.getElementById("homeButton");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
 const menuButton = document.getElementById("menuButton");
 const navBackdrop = document.getElementById("navBackdrop");
+const mobileHeaderDock = document.getElementById("mobileHeaderDock");
+const desktopHeaderRow = document.getElementById("desktopHeaderRow");
 const mobileQuery = window.matchMedia("(max-width: 767px)");
 
 let currentMode = "html";
@@ -650,6 +667,31 @@ function toggleNav() {
 
 function updateSearchClearState() {
     searchWrap.classList.toggle("has-text", searchBox.value.trim().length > 0);
+}
+
+function updateTitleText() {
+    if (viewer.style.display === "block") {
+        logoText.textContent = `Free Web Games | ${currentGameTitle || "Game"}`;
+        return;
+    }
+
+    if (isMobileLayout()) {
+        logoText.textContent = "Free Web Games | Game Library";
+    } else {
+        logoText.textContent = "Free Web Games";
+    }
+}
+
+function moveSearchBarForLayout() {
+    if (isMobileLayout()) {
+        if (mobileHeaderDock && searchWrap.parentElement !== mobileHeaderDock) {
+            mobileHeaderDock.appendChild(searchWrap);
+        }
+    } else {
+        if (desktopHeaderRow && searchWrap.parentElement !== desktopHeaderRow) {
+            desktopHeaderRow.appendChild(searchWrap);
+        }
+    }
 }
 
 function parseConfig(text) {
@@ -833,9 +875,10 @@ function updateFlashScale() {
 function openGame(url, title) {
     viewer.style.display = "block";
     homeButton.style.display = "block";
-    logoText.textContent = `Free Web Games | ${title}`;
+    currentGameTitle = title || "Game";
     document.body.classList.add("is-playing");
     closeNav();
+    updateTitleText();
 
     clearViewerContent();
 
@@ -880,19 +923,25 @@ function closeGame() {
     gameShell.classList.add("html-shell");
 
     homeButton.style.display = "none";
-    logoText.textContent = "Free Web Games";
+    currentGameTitle = "";
     document.body.classList.remove("is-playing");
     closeNav();
     currentMode = "html";
+    updateTitleText();
 }
 
 function syncResponsiveState() {
+    moveSearchBarForLayout();
+
     if (!isMobileLayout()) {
         closeNav();
     }
+
     if (viewer.style.display !== "block") {
         document.body.classList.remove("is-playing");
     }
+
+    updateTitleText();
 }
 
 homeButton.addEventListener("click", closeGame);
@@ -928,6 +977,7 @@ async function loadConfig() {
         renderCategories();
         renderGames();
         updateSearchClearState();
+        syncResponsiveState();
     } catch (err) {
         console.error(err);
         grid.innerHTML = `
