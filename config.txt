@@ -53,6 +53,9 @@ url|https://freewebgames.github.io/Paper.io.html
 cat|Survival, Action
 input|all
 
-title|Test
+title|Bloons TD 5
+desc|Bloons TD 5 is a classic tower defense game where you deploy powerful monkey towers, unlock upgrades, and stop endless waves of colorful bloons from reaching the end of the track.
+img|https://assets1.ignimgs.com/2015/07/01/btd5blogrolljpg-9c6c14_1280w.jpg
 url|https://freewebgames.github.io/bloons-tower-defense-5.swf
-desc|Test
+cat|Tower Defense, Strategy
+input|all
