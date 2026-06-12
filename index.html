@@ -43,7 +43,8 @@
     padding:0;
 }
 
-html,body{
+html,
+body{
     height:100%;
 }
 
@@ -66,6 +67,13 @@ body{
     z-index:30;
 }
 
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+}
+
 .logo{
     font-size:1.9rem;
     font-weight:700;
@@ -74,6 +82,44 @@ body{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+}
+
+.menu-button{
+    display:none;
+    border:none;
+    background:var(--blue);
+    color:#fff;
+    width:42px;
+    height:42px;
+    border-radius:8px;
+    cursor:pointer;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
+    flex-shrink:0;
+    padding:0;
+    line-height:0;
+}
+
+.menu-button:hover{
+    filter:brightness(1.08);
+}
+
+.hamburger-icon{
+    width:18px;
+    height:14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:stretch;
+}
+
+.hamburger-icon span{
+    display:block;
+    width:100%;
+    height:2px;
+    border-radius:999px;
+    background:#fff;
 }
 
 .back-button{
@@ -139,6 +185,7 @@ body{
     overflow-y:auto;
     padding:30px;
     min-height:0;
+    -webkit-overflow-scrolling:touch;
 }
 
 .header-row{
@@ -155,19 +202,53 @@ body{
     color:#fff;
 }
 
-.search{
+.search-wrap{
+    position:relative;
     width:min(320px, 100%);
+    flex-shrink:0;
+}
+
+.search{
+    width:100%;
     border:none;
     outline:none;
     background:#316282;
     color:#fff;
-    padding:10px 14px;
+    padding:10px 40px 10px 14px;
     border-radius:4px;
     font-size:1rem;
 }
 
 .search::placeholder{
     color:#d6e8f3;
+}
+
+.search-clear{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    width:24px;
+    height:24px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+    font-size:15px;
+    padding:0;
+}
+
+.search-clear:hover{
+    background:rgba(255,255,255,.24);
+}
+
+.search-wrap.has-text .search-clear{
+    display:inline-flex;
 }
 
 .games-grid{
@@ -374,26 +455,89 @@ body{
     font-size:1rem;
 }
 
-@media (max-width: 900px){
+.backdrop{
+    display:none;
+}
+
+/* Mobile / small tablet layout */
+@media (max-width: 767px){
+    .topbar{
+        padding:0 14px;
+    }
+
+    .menu-button{
+        display:inline-flex;
+    }
+
+    .logo{
+        font-size:1.35rem;
+    }
+
+    .back-button{
+        padding:9px 12px;
+        font-size:.9rem;
+    }
+
     .sidebar{
+        position:fixed;
+        top:72px;
+        left:0;
+        bottom:0;
+        width:min(84vw, 300px);
+        transform:translateX(-102%);
+        transition:transform .22s ease;
+        z-index:45;
+        box-shadow:12px 0 30px rgba(0,0,0,.45);
+    }
+
+    body.nav-open .sidebar{
+        transform:translateX(0);
+    }
+
+    .backdrop{
+        display:block;
+        position:fixed;
+        inset:72px 0 0 0;
+        background:rgba(0,0,0,.55);
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .2s ease;
+        z-index:35;
+    }
+
+    body.nav-open .backdrop{
+        opacity:1;
+        pointer-events:auto;
+    }
+
+    body.is-playing .menu-button{
         display:none;
     }
 
     .content{
-        padding:20px;
+        padding:18px 16px 22px;
     }
 
     .header-row{
-        flex-direction:column;
-        align-items:stretch;
+        display:block;
+        margin-bottom:18px;
     }
 
-    .search{
+    .library-title{
+        font-size:1.55rem;
+        margin-bottom:12px;
+    }
+
+    .search-wrap{
         width:100%;
+        position:sticky;
+        top:0;
+        z-index:25;
     }
 
     .games-grid{
         grid-template-columns:1fr;
+        gap:16px;
     }
 
     .game-toprow{
@@ -410,12 +554,21 @@ body{
 <body>
 
 <div class="topbar">
-    <div class="logo" id="logoText">Free Web Games</div>
-    <button class="back-button" id="homeButton">Back To Library</button>
+    <div class="topbar-left">
+        <button class="menu-button" id="menuButton" type="button" aria-label="Open categories menu" aria-expanded="false">
+            <span class="hamburger-icon" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </button>
+        <div class="logo" id="logoText">Free Web Games</div>
+    </div>
+    <button class="back-button" id="homeButton" type="button">Back To Library</button>
 </div>
 
 <div class="main">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <h2>Categories</h2>
         <a class="cat active" data-cat="all">All Games</a>
         <div id="catList"></div>
@@ -424,13 +577,18 @@ body{
     <section class="content">
         <div class="header-row">
             <div class="library-title">Game Library</div>
-            <input id="searchBox" class="search" type="text" placeholder="Search games..." />
+            <div class="search-wrap" id="searchWrap">
+                <input id="searchBox" class="search" type="text" placeholder="Search games..." />
+                <button id="searchClear" class="search-clear" type="button" aria-label="Clear search">×</button>
+            </div>
         </div>
 
         <div id="gamesGrid" class="games-grid"></div>
         <div class="footer">Free Web Games © 2026</div>
     </section>
 </div>
+
+<div class="backdrop" id="navBackdrop"></div>
 
 <div class="viewer" id="viewer">
     <div id="gameShell" class="game-shell html-shell">
@@ -446,6 +604,8 @@ let currentCategory = "all";
 const grid = document.getElementById("gamesGrid");
 const catList = document.getElementById("catList");
 const searchBox = document.getElementById("searchBox");
+const searchClear = document.getElementById("searchClear");
+const searchWrap = document.getElementById("searchWrap");
 const viewer = document.getElementById("viewer");
 const gameShell = document.getElementById("gameShell");
 const frame = document.getElementById("gameFrame");
@@ -453,8 +613,33 @@ const ruffleContainer = document.getElementById("ruffleContainer");
 const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
+const menuButton = document.getElementById("menuButton");
+const navBackdrop = document.getElementById("navBackdrop");
+const mobileQuery = window.matchMedia("(max-width: 767px)");
 
 let currentMode = "html";
+
+function isMobileLayout() {
+    return mobileQuery.matches;
+}
+
+function setNavOpen(open) {
+    document.body.classList.toggle("nav-open", open);
+    menuButton.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+function closeNav() {
+    setNavOpen(false);
+}
+
+function toggleNav() {
+    if (!isMobileLayout()) return;
+    setNavOpen(!document.body.classList.contains("nav-open"));
+}
+
+function updateSearchClearState() {
+    searchWrap.classList.toggle("has-text", searchBox.value.trim().length > 0);
+}
 
 function parseConfig(text) {
     const blocks = text
@@ -552,6 +737,7 @@ function renderCategories() {
             currentCategory = category;
             setActiveCategory(category);
             renderGames();
+            if (isMobileLayout()) closeNav();
         });
         catList.appendChild(a);
     });
@@ -637,6 +823,8 @@ function openGame(url, title) {
     viewer.style.display = "block";
     homeButton.style.display = "block";
     logoText.textContent = `Free Web Games | ${title}`;
+    document.body.classList.add("is-playing");
+    closeNav();
 
     clearViewerContent();
 
@@ -682,17 +870,41 @@ function closeGame() {
 
     homeButton.style.display = "none";
     logoText.textContent = "Free Web Games";
+    document.body.classList.remove("is-playing");
+    closeNav();
     currentMode = "html";
 }
 
+function syncResponsiveState() {
+    if (!isMobileLayout()) {
+        closeNav();
+    }
+    if (viewer.style.display !== "block") {
+        document.body.classList.remove("is-playing");
+    }
+}
+
 homeButton.addEventListener("click", closeGame);
-searchBox.addEventListener("input", renderGames);
+menuButton.addEventListener("click", toggleNav);
+navBackdrop.addEventListener("click", closeNav);
+searchBox.addEventListener("input", () => {
+    updateSearchClearState();
+    renderGames();
+});
+searchClear.addEventListener("click", () => {
+    searchBox.value = "";
+    updateSearchClearState();
+    renderGames();
+    searchBox.focus();
+});
 allCatButton.addEventListener("click", () => {
     currentCategory = "all";
     setActiveCategory("all");
     renderGames();
 });
 window.addEventListener("resize", updateFlashScale);
+window.addEventListener("resize", syncResponsiveState);
+mobileQuery.addEventListener("change", syncResponsiveState);
 
 async function loadConfig() {
     try {
@@ -704,6 +916,7 @@ async function loadConfig() {
 
         renderCategories();
         renderGames();
+        updateSearchClearState();
     } catch (err) {
         console.error(err);
         grid.innerHTML = `
