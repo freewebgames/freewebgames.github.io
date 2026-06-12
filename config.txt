@@ -115,33 +115,33 @@ title|Learn to Fly
 desc|Launch a penguin and use earned upgrades to increase distance, improve momentum, and gradually achieve longer airborne runs.
 img|https://www.coolmathgames.com/sites/default/files/LearntoFly_OG-logo.jpg
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly.swf
-cat|Arcade, Launch, Physics, Upgrade
+cat|Arcade, Launch, Physics
 input|all
 
 title|Learn to Fly 2
 desc|Use improved launch mechanics and upgrade systems to send a penguin farther through controlled flights and incremental enhancements.
 img|https://www.hahagames.com/_next/image?url=https:%2F%2Fstatic.hahagames.com%2Fmedia%2F636f25cc-d189-40ad-bc3c-a519e1692da1%2F5d7aa7f1-eccd-45d9-ae2d-3926d090aa31.png&w=3840&q=75
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly%202.swf
-cat|Arcade, Launch, Physics, Upgrade
+cat|Arcade, Launch, Physics
 input|all
 
 title|Learn to Fly 3
 desc|Upgrade experimental launch equipment to propel a penguin through increasingly advanced stages with extended flight objectives.
 img|https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/589870/capsule_616x353.jpg?t=1643409029
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly%203.swf
-cat|Arcade, Launch, Physics, Upgrade, Sci-Fi
+cat|Arcade, Launch, Physics
 input|all
 
 title|The Impossible Quiz
 desc|Answer a series of deceptive and unconventional questions where logic is often misleading and creative interpretation is required.
 img|https://dash.gamestores.fun/uploads/og_The_Impossible_Quiz_3a546abc94.png
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz.swf
-cat|Puzzle, Quiz, Humor
+cat|Puzzle, Humor
 input|mouse+touch
 
 title|The Impossible Quiz 2
 desc|Solve increasingly unpredictable quiz challenges filled with trick answers, hidden rules, and unconventional logic puzzles.
 img|https://i.ytimg.com/vi/vNLVz_BNUZY/maxresdefault.jpg
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz%202.swf
-cat|Puzzle, Quiz, Humor
+cat|Puzzle, Humor
 input|mouse+touch
