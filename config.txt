@@ -64,42 +64,42 @@ creator_url|https://store.steampowered.com/app/306020/Bloons_TD_5/
 
 title|Duck Life
 desc|Train a duck across running, swimming, and flying challenges, then compete in races to earn money and unlock upgrades that improve performance.
-img|
+img|https://www.coolmathgames.com/sites/default/files/DuckLife_OG-logo.jpg
 url|https://freewebgames.github.io/Flash/529535_ducklife.swf
 cat|Racing, Simulation, Training, Arcade
-input|mouse+touch
+input|all
 
 title|Duck Life 2
 desc|Build and train a duck through multiple skill-based mini-games, then enter races where improved stats determine your success.
-img|
+img|https://www.coolmathgames.com/sites/default/files/DuckLife2_OG-logo.jpg
 url|https://freewebgames.github.io/Flash/542198_DuckLife2b.swf
 cat|Racing, Simulation, Training, Arcade
-input|mouse+touch
+input|all
 
 title|Duck Life 3
 desc|Compete in structured racing tournaments while training a duck across different environments and upgrading abilities between events.
-img|
+img|https://www.coolmathgames.com/sites/default/files/DuckLife3_OG-logo.jpg
 url|https://freewebgames.github.io/Flash/570338_DuckLife3.swf
 cat|Racing, Simulation, Training, Arcade
-input|mouse+touch
+input|all
 
 title|Duck Life 4
 desc|Explore a world map while training skills through mini-games and entering races across different regions to earn rewards and progress.
-img|
+img|https://www.coolmathgames.com/sites/default/files/DuckLife4_OG-logo.jpg
 url|https://freewebgames.github.io/Flash/duck-life-4.swf
 cat|Racing, Simulation, Training, Arcade
-input|mouse+touch
+input|all
 
 title|Age of War
 desc|Control a base in a side-scrolling battlefield where you spawn units, defend your territory, and advance through historical ages.
-img|
+img|https://freewebgames.github.io/Assets/AgeOfWar.png
 url|https://freewebgames.github.io/Flash/age_of_war.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
 
 title|Age of War 2
 desc|Manage resources and deploy units across evolving eras, balancing offense and defense to destroy the opposing base.
-img|
+img|https://i.ytimg.com/vi/glYH0k5pFx8/maxresdefault.jpg
 url|https://freewebgames.github.io/Flash/age-of-war-2-publicOTM3.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
@@ -113,35 +113,35 @@ input|mouse+touch
 
 title|Learn to Fly
 desc|Launch a penguin and use earned upgrades to increase distance, improve momentum, and gradually achieve longer airborne runs.
-img|
+img|https://www.coolmathgames.com/sites/default/files/LearntoFly_OG-logo.jpg
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly.swf
 cat|Arcade, Launch, Physics, Upgrade
-input|mouse+touch
+input|all
 
 title|Learn to Fly 2
 desc|Use improved launch mechanics and upgrade systems to send a penguin farther through controlled flights and incremental enhancements.
-img|
+img|https://www.hahagames.com/_next/image?url=https:%2F%2Fstatic.hahagames.com%2Fmedia%2F636f25cc-d189-40ad-bc3c-a519e1692da1%2F5d7aa7f1-eccd-45d9-ae2d-3926d090aa31.png&w=3840&q=75
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly%202.swf
 cat|Arcade, Launch, Physics, Upgrade
-input|mouse+touch
+input|all
 
 title|Learn to Fly 3
 desc|Upgrade experimental launch equipment to propel a penguin through increasingly advanced stages with extended flight objectives.
-img|
+img|https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/589870/capsule_616x353.jpg?t=1643409029
 url|https://freewebgames.github.io/Flash/Learn%20to%20Fly%203.swf
 cat|Arcade, Launch, Physics, Upgrade, Sci-Fi
-input|mouse+touch
+input|all
 
 title|The Impossible Quiz
 desc|Answer a series of deceptive and unconventional questions where logic is often misleading and creative interpretation is required.
-img|
+img|https://dash.gamestores.fun/uploads/og_The_Impossible_Quiz_3a546abc94.png
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz.swf
 cat|Puzzle, Quiz, Humor
 input|mouse+touch
 
 title|The Impossible Quiz 2
 desc|Solve increasingly unpredictable quiz challenges filled with trick answers, hidden rules, and unconventional logic puzzles.
-img|
+img|https://i.ytimg.com/vi/vNLVz_BNUZY/maxresdefault.jpg
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz%202.swf
 cat|Puzzle, Quiz, Humor
 input|mouse+touch
