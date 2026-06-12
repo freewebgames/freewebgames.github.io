@@ -35,6 +35,7 @@
     --viewer-border:#ffffff;
     --viewer-border-width:3px;
     --viewer-radius:3px;
+    --topbar-h:72px;
 }
 
 *{
@@ -56,15 +57,23 @@ body{
 }
 
 .topbar{
-    height:72px;
+    min-height:72px;
     background:linear-gradient(to bottom, var(--panel3), #171d25);
     display:flex;
-    align-items:center;
-    justify-content:space-between;
+    flex-direction:column;
+    justify-content:center;
     padding:0 28px;
     border-bottom:1px solid var(--line);
     position:relative;
     z-index:30;
+}
+
+.topbar-upper{
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
 }
 
 .topbar-left{
@@ -72,6 +81,7 @@ body{
     align-items:center;
     gap:12px;
     min-width:0;
+    flex:1;
 }
 
 .logo{
@@ -132,15 +142,20 @@ body{
     font-weight:700;
     cursor:pointer;
     box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
+    flex-shrink:0;
 }
 
 .back-button:hover{
     filter:brightness(1.08);
 }
 
+.mobile-search-row{
+    display:none;
+}
+
 .main{
     display:flex;
-    height:calc(100vh - 72px);
+    height:calc(100vh - var(--topbar-h));
     min-height:0;
 }
 
@@ -254,10 +269,6 @@ body{
 
 .search-wrap.has-text .search-clear{
     display:inline-flex;
-}
-
-.mobile-header-dock{
-    display:none;
 }
 
 .games-grid{
@@ -400,7 +411,7 @@ body{
 
 .viewer{
     position:fixed;
-    inset:72px 0 0 0;
+    inset:var(--topbar-h) 0 0 0;
     background:#0b1118;
     display:none;
     z-index:20;
@@ -470,8 +481,20 @@ body{
 
 /* Mobile / small tablet layout */
 @media (max-width: 767px){
+    :root{
+        --topbar-h:auto;
+    }
+
     .topbar{
-        padding:0 14px;
+        position:relative;
+        min-height:0;
+        padding:12px 14px 10px;
+        gap:10px;
+    }
+
+    .topbar-upper{
+        min-height:0;
+        width:100%;
     }
 
     .menu-button{
@@ -487,9 +510,18 @@ body{
         font-size:.9rem;
     }
 
+    .mobile-search-row{
+        display:block;
+        width:100%;
+    }
+
+    .mobile-search-row .search-wrap{
+        width:100%;
+    }
+
     .sidebar{
         position:fixed;
-        top:72px;
+        top:0;
         left:0;
         bottom:0;
         width:min(84vw, 300px);
@@ -506,7 +538,7 @@ body{
     .backdrop{
         display:block;
         position:fixed;
-        inset:72px 0 0 0;
+        inset:0;
         background:rgba(0,0,0,.55);
         opacity:0;
         pointer-events:none;
@@ -531,31 +563,6 @@ body{
         display:none;
     }
 
-    .mobile-header-dock{
-        display:block;
-        position:sticky;
-        top:0;
-        z-index:25;
-        background:var(--bg);
-        padding:12px 0 12px;
-        margin-bottom:14px;
-    }
-
-    .mobile-header-title{
-        display:block;
-        font-size:1.55rem;
-        font-weight:700;
-        color:#fff;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        margin-bottom:10px;
-    }
-
-    .mobile-header-dock .search-wrap{
-        width:100%;
-    }
-
     .games-grid{
         grid-template-columns:1fr;
         gap:16px;
@@ -569,23 +576,30 @@ body{
     .input-badge{
         width:fit-content;
     }
+
+    .footer{
+        margin-top:22px;
+    }
 }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="topbar-left">
-        <button class="menu-button" id="menuButton" type="button" aria-label="Open categories menu" aria-expanded="false">
-            <span class="hamburger-icon" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-        </button>
-        <div class="logo" id="logoText">Free Web Games</div>
+    <div class="topbar-upper">
+        <div class="topbar-left">
+            <button class="menu-button" id="menuButton" type="button" aria-label="Open categories menu" aria-expanded="false">
+                <span class="hamburger-icon" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </button>
+            <div class="logo" id="logoText">Free Web Games</div>
+        </div>
+        <button class="back-button" id="homeButton" type="button">Back To Library</button>
     </div>
-    <button class="back-button" id="homeButton" type="button">Back To Library</button>
+    <div class="mobile-search-row" id="mobileSearchRow"></div>
 </div>
 
 <div class="main">
@@ -602,10 +616,6 @@ body{
                 <input id="searchBox" class="search" type="text" placeholder="Search games..." />
                 <button id="searchClear" class="search-clear" type="button" aria-label="Clear search">×</button>
             </div>
-        </div>
-
-        <div class="mobile-header-dock" id="mobileHeaderDock">
-            <div class="mobile-header-title">Game Library</div>
         </div>
 
         <div id="gamesGrid" class="games-grid"></div>
@@ -641,7 +651,7 @@ const homeButton = document.getElementById("homeButton");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
 const menuButton = document.getElementById("menuButton");
 const navBackdrop = document.getElementById("navBackdrop");
-const mobileHeaderDock = document.getElementById("mobileHeaderDock");
+const mobileSearchRow = document.getElementById("mobileSearchRow");
 const desktopHeaderRow = document.getElementById("desktopHeaderRow");
 const mobileQuery = window.matchMedia("(max-width: 767px)");
 
@@ -669,6 +679,13 @@ function updateSearchClearState() {
     searchWrap.classList.toggle("has-text", searchBox.value.trim().length > 0);
 }
 
+function updateTopbarHeight() {
+    const topbar = document.querySelector(".topbar");
+    if (!topbar) return;
+    const h = topbar.offsetHeight;
+    document.documentElement.style.setProperty("--topbar-h", `${h}px`);
+}
+
 function updateTitleText() {
     if (viewer.style.display === "block") {
         logoText.textContent = `Free Web Games | ${currentGameTitle || "Game"}`;
@@ -684,11 +701,11 @@ function updateTitleText() {
 
 function moveSearchBarForLayout() {
     if (isMobileLayout()) {
-        if (mobileHeaderDock && searchWrap.parentElement !== mobileHeaderDock) {
-            mobileHeaderDock.appendChild(searchWrap);
+        if (searchWrap.parentElement !== mobileSearchRow) {
+            mobileSearchRow.appendChild(searchWrap);
         }
     } else {
-        if (desktopHeaderRow && searchWrap.parentElement !== desktopHeaderRow) {
+        if (searchWrap.parentElement !== desktopHeaderRow) {
             desktopHeaderRow.appendChild(searchWrap);
         }
     }
@@ -910,6 +927,8 @@ function openGame(url, title) {
         gameShell.style.transform = "none";
         frame.src = url;
     }
+
+    updateTopbarHeight();
 }
 
 function closeGame() {
@@ -928,6 +947,7 @@ function closeGame() {
     closeNav();
     currentMode = "html";
     updateTitleText();
+    updateTopbarHeight();
 }
 
 function syncResponsiveState() {
@@ -942,6 +962,8 @@ function syncResponsiveState() {
     }
 
     updateTitleText();
+    updateSearchClearState();
+    updateTopbarHeight();
 }
 
 homeButton.addEventListener("click", closeGame);
@@ -985,6 +1007,7 @@ async function loadConfig() {
                 Could not load config.txt.
             </div>
         `;
+        syncResponsiveState();
     }
 }
 
