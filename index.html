@@ -481,15 +481,9 @@ body{
 
 /* Mobile / small tablet layout */
 @media (max-width: 767px){
-    :root{
-        --topbar-h:auto;
-    }
-
     .topbar{
-        position:relative;
         min-height:0;
         padding:12px 14px 10px;
-        gap:10px;
     }
 
     .topbar-upper{
@@ -513,6 +507,7 @@ body{
     .mobile-search-row{
         display:block;
         width:100%;
+        margin-top:10px;
     }
 
     .mobile-search-row .search-wrap{
@@ -682,8 +677,7 @@ function updateSearchClearState() {
 function updateTopbarHeight() {
     const topbar = document.querySelector(".topbar");
     if (!topbar) return;
-    const h = topbar.offsetHeight;
-    document.documentElement.style.setProperty("--topbar-h", `${h}px`);
+    document.documentElement.style.setProperty("--topbar-h", `${topbar.offsetHeight}px`);
 }
 
 function updateTitleText() {
@@ -952,6 +946,9 @@ function closeGame() {
 
 function syncResponsiveState() {
     moveSearchBarForLayout();
+    updateTitleText();
+    updateSearchClearState();
+    updateTopbarHeight();
 
     if (!isMobileLayout()) {
         closeNav();
@@ -960,10 +957,6 @@ function syncResponsiveState() {
     if (viewer.style.display !== "block") {
         document.body.classList.remove("is-playing");
     }
-
-    updateTitleText();
-    updateSearchClearState();
-    updateTopbarHeight();
 }
 
 homeButton.addEventListener("click", closeGame);
