@@ -28,34 +28,34 @@ creator_url|https://store.steampowered.com/app/1454400/Cookie_Clicker/
 title|Eggy Car
 desc|Eggy Car is a fun driving game where you cruise over bumpy hills and tricky terrain while trying to keep a fragile egg balanced on top of your car.
 img|https://assets.funnygames.se/9/113739/96341/1344x896/eggy-car.jpg
-url|https://freewebgames.github.io/Eggy%20Car.html
+url|https://freewebgames.github.io/HTML/Eggy%20Car.html
 cat|Physics, Endless
 input|all
 
 title|Moto X3M 3
 desc|Moto X3M 3 is the third entry in the Moto X3M series, delivering high-speed motorcycle stunt action as you race through wild obstacle courses, pull off flips, and push for the fastest times.
 img|https://i.ytimg.com/vi/TdJiJkpiSOA/maxresdefault.jpg
-url|https://freewebgames.github.io/Moto%20X3M%203.html
+url|https://freewebgames.github.io/HTML/Moto%20X3M%203.html
 cat|Racing, Physics, Action
 input|keyboard
 
 title|Idle Breakout
 desc|Idle Breakout is an incremental arcade game where you break layers of bricks by upgrading and spawning bouncing balls that automatically smash through the grid and steadily scale your damage over time.
 img|https://www.coolmathgames.com/sites/default/files/IdleBreakout_OG-logo.jpg
-url|https://freewebgames.github.io/idlebreakout.html
+url|https://freewebgames.github.io/HTML/idlebreakout.html
 cat|idle, Physics, Tycoon
 input|mouse+touch
 
 title|Paper.io
 desc|Paper.io is a competitive territory-capture game where you expand your area by drawing loops, outmaneuvering opponents, and avoiding collisions to dominate the map.
 img|https://image.winudf.com/v2/image1/aW8udm9vZG9vLnBhcGVyaW9fc2NyZWVuXzExXzE1NDIxMzU5NzBfMDk4/screen-11.jpg?fakeurl=1&type=.jpg
-url|https://freewebgames.github.io/Paper.io.html
+url|https://freewebgames.github.io/HTML/Paper.io.html
 cat|Survival, Action
 input|all
 
 title|Bloons TD 5
 desc|Bloons TD 5 is a classic tower defense game where you deploy powerful monkey towers, unlock upgrades, and stop endless waves of colorful bloons from reaching the end of the track.
 img|https://assets1.ignimgs.com/2015/07/01/btd5blogrolljpg-9c6c14_1280w.jpg
-url|https://freewebgames.github.io/bloons-tower-defense-5.swf
+url|https://freewebgames.github.io/Flash/bloons-tower-defense-5.swf
 cat|Tower Defense, Strategy
 input|all
