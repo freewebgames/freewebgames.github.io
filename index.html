@@ -85,92 +85,6 @@ body{
     flex:1;
 }
 
-.topbar-right{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-left:auto;
-    flex-shrink:0;
-}
-
-.game-controls{
-    display:none;
-    align-items:center;
-    gap:8px;
-    flex-shrink:0;
-}
-
-.control-button{
-    border:none;
-    background:var(--blue);
-    color:#fff;
-    width:42px;
-    height:42px;
-    border-radius:8px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
-    flex-shrink:0;
-    padding:0;
-    line-height:0;
-}
-
-.control-button:hover{
-    filter:brightness(1.08);
-}
-
-.control-button svg{
-    width:18px;
-    height:18px;
-    stroke:currentColor;
-    fill:none;
-    stroke-width:2;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-}
-
-.viewer-controls{
-    position:absolute;
-    top:12px;
-    right:12px;
-    z-index:50;
-    display:none;
-    align-items:center;
-    gap:8px;
-}
-
-body.is-playing .game-controls{
-    display:flex;
-}
-
-body.fake-fullscreen .viewer{
-    position:fixed;
-    inset:0;
-    z-index:9999;
-    display:block;
-    background:#0b1118;
-}
-
-.keyboard-proxy{
-    position:fixed;
-    top:8px;
-    right:8px;
-    width:1px;
-    height:1px;
-    opacity:0.01;
-    border:0;
-    padding:0;
-    margin:0;
-    background:transparent;
-    color:transparent;
-    caret-color:transparent;
-    z-index:-1;
-    pointer-events:none;
-}
-
-
 .logo{
     font-size:1.9rem;
     font-weight:700;
@@ -234,6 +148,74 @@ body.fake-fullscreen .viewer{
 
 .back-button:hover{
     filter:brightness(1.08);
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+}
+
+.control-button{
+    border:none;
+    background:var(--blue);
+    color:#fff;
+    width:42px;
+    height:42px;
+    border-radius:8px;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
+    padding:0;
+    flex-shrink:0;
+}
+
+.control-button:hover{
+    filter:brightness(1.08);
+}
+
+.control-button svg{
+    width:20px;
+    height:20px;
+    display:block;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.viewer-controls{
+    position:absolute;
+    top:12px;
+    right:12px;
+    display:none;
+    gap:10px;
+    z-index:50;
+    pointer-events:auto;
+}
+
+.keyboard-proxy{
+    position:fixed;
+    left:-9999px;
+    top:0;
+    width:1px;
+    height:1px;
+    opacity:0;
+    pointer-events:none;
+}
+
+body.fake-fullscreen .topbar,
+body.fake-fullscreen .main,
+body.fake-fullscreen .backdrop{
+    display:none;
+}
+
+body.fake-fullscreen .viewer{
+    top:0;
 }
 
 .mobile-search-row{
@@ -550,7 +532,6 @@ body.fake-fullscreen .viewer{
     width:800px;
     height:600px;
     transform:translate(-50%, -50%) scale(1);
-    will-change:transform;
 }
 
 #ruffleContainer{
@@ -610,19 +591,9 @@ body.is-playing .mobile-search-row{
         font-size:.9rem;
     }
 
-    .topbar-right{
-        gap:8px;
-    }
-
     .control-button{
-        width:40px;
-        height:40px;
-        border-radius:8px;
-    }
-
-    .control-button svg{
-        width:17px;
-        height:17px;
+        width:38px;
+        height:38px;
     }
 
     .mobile-search-row{
@@ -720,22 +691,20 @@ body.is-playing .mobile-search-row{
         </div>
         <div class="topbar-right" id="topbarRight">
             <button class="back-button" id="homeButton" type="button">Back To Library</button>
-            <div class="game-controls" id="gameControls">
-                <button class="control-button fullscreen-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Fullscreen">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M8 3H3v5"></path>
-                        <path d="M16 3h5v5"></path>
-                        <path d="M21 16v5h-5"></path>
-                        <path d="M3 16v5h5"></path>
-                    </svg>
-                </button>
-                <button class="control-button keyboard-button" id="keyboardButton" type="button" aria-label="Open keyboard" title="Open keyboard">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <rect x="3" y="6" width="18" height="12" rx="2"></rect>
-                        <path d="M6 10h0M9 10h0M12 10h0M15 10h0M18 10h0M7 14h10"></path>
-                    </svg>
-                </button>
-            </div>
+            <button class="control-button fullscreen-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Fullscreen">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M8 3H3v5"></path>
+                    <path d="M16 3h5v5"></path>
+                    <path d="M8 21H3v-5"></path>
+                    <path d="M21 16v5h-5"></path>
+                </svg>
+            </button>
+            <button class="control-button keyboard-button" id="keyboardButton" type="button" aria-label="Open keyboard" title="Open keyboard">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="3" y="6" width="18" height="12" rx="2"></rect>
+                    <path d="M6 10h0M9 10h0M12 10h0M15 10h0M18 10h0M6 14h12"></path>
+                </svg>
+            </button>
         </div>
     </div>
     <div class="mobile-search-row" id="mobileSearchRow"></div>
@@ -795,42 +764,19 @@ const navBackdrop = document.getElementById("navBackdrop");
 const mobileSearchRow = document.getElementById("mobileSearchRow");
 const desktopHeaderRow = document.getElementById("desktopHeaderRow");
 const topbarRight = document.getElementById("topbarRight");
-const gameControls = document.getElementById("gameControls");
 const viewerControls = document.getElementById("viewerControls");
 const fullscreenButton = document.getElementById("fullscreenButton");
 const keyboardButton = document.getElementById("keyboardButton");
 const keyboardProxy = document.getElementById("keyboardProxy");
 const mobileQuery = window.matchMedia("(max-width: 767px)");
+const mobileDeviceQuery = window.matchMedia("(pointer: coarse) and (hover: none)");
 
 let currentMode = "html";
 let currentFlashPlayer = null;
+let keyboardOpen = false;
 
 function isMobileLayout() {
     return mobileQuery.matches;
-}
-
-function isMobileDevice() {
-    return window.matchMedia("(pointer: coarse)").matches && window.matchMedia("(hover: none)").matches;
-}
-
-function isGameFullscreen() {
-    return document.fullscreenElement === viewer || document.webkitFullscreenElement === viewer || document.body.classList.contains("fake-fullscreen");
-}
-
-function moveGameControls() {
-    const host = isGameFullscreen() ? viewerControls : topbarRight;
-    if (gameControls.parentElement !== host) {
-        host.appendChild(gameControls);
-    }
-
-    gameControls.style.display = document.body.classList.contains("is-playing") ? "flex" : "none";
-    viewerControls.style.display = isGameFullscreen() ? "flex" : "none";
-    keyboardButton.style.display = (document.body.classList.contains("is-playing") && isMobileDevice()) ? "inline-flex" : "none";
-
-    if (fullscreenButton) {
-        fullscreenButton.setAttribute("aria-label", isGameFullscreen() ? "Exit fullscreen" : "Toggle fullscreen");
-        fullscreenButton.setAttribute("title", isGameFullscreen() ? "Exit fullscreen" : "Fullscreen");
-    }
 }
 
 function setNavOpen(open) {
@@ -880,6 +826,271 @@ function moveSearchBarForLayout() {
             desktopHeaderRow.appendChild(searchWrap);
         }
     }
+}
+
+function isMobileDevice() {
+    return mobileDeviceQuery.matches;
+}
+
+function isGameFullscreen() {
+    return document.fullscreenElement === viewer ||
+        document.webkitFullscreenElement === viewer ||
+        document.body.classList.contains("fake-fullscreen");
+}
+
+function codeForKey(key) {
+    if (key === " ") return "Space";
+    if (key.length === 1) {
+        const upper = key.toUpperCase();
+        if (upper >= "A" && upper <= "Z") return `Key${upper}`;
+        if (upper >= "0" && upper <= "9") return `Digit${upper}`;
+    }
+
+    const map = {
+        Enter: "Enter",
+        Backspace: "Backspace",
+        Tab: "Tab",
+        Escape: "Escape",
+        Delete: "Delete",
+        ArrowLeft: "ArrowLeft",
+        ArrowRight: "ArrowRight",
+        ArrowUp: "ArrowUp",
+        ArrowDown: "ArrowDown",
+        Home: "Home",
+        End: "End",
+        PageUp: "PageUp",
+        PageDown: "PageDown"
+    };
+
+    return map[key] || "";
+}
+
+function setKeyboardOpen(open) {
+    keyboardOpen = open;
+    document.body.classList.toggle("keyboard-open", open);
+    updateGameViewport();
+}
+
+function focusGameSurface() {
+    if (currentMode === "flash" && currentFlashPlayer && typeof currentFlashPlayer.focus === "function") {
+        try {
+            currentFlashPlayer.focus();
+            return;
+        } catch (err) {
+            // fall through
+        }
+    }
+
+    try {
+        frame.focus({ preventScroll: true });
+    } catch (err) {
+        try {
+            frame.focus();
+        } catch (err2) {
+            // ignore
+        }
+    }
+}
+
+function getKeyboardTargets() {
+    if (currentMode === "flash") {
+        return [currentFlashPlayer, window].filter(Boolean);
+    }
+
+    const targets = [];
+    try {
+        if (frame.contentWindow) targets.push(frame.contentWindow);
+    } catch (err) {
+        // cross-origin iframe or not ready
+    }
+
+    try {
+        if (frame.contentDocument) targets.push(frame.contentDocument);
+    } catch (err) {
+        // cross-origin iframe or not ready
+    }
+
+    targets.push(window);
+    return targets;
+}
+
+function dispatchKeyToTargets(type, key, sourceEvent = {}) {
+    const targets = getKeyboardTargets();
+    const eventInit = {
+        key,
+        code: sourceEvent.code || codeForKey(key),
+        location: sourceEvent.location || 0,
+        ctrlKey: !!sourceEvent.ctrlKey,
+        shiftKey: !!sourceEvent.shiftKey,
+        altKey: !!sourceEvent.altKey,
+        metaKey: !!sourceEvent.metaKey,
+        repeat: !!sourceEvent.repeat,
+        bubbles: true,
+        cancelable: true
+    };
+
+    for (const target of targets) {
+        try {
+            target.dispatchEvent(new KeyboardEvent(type, eventInit));
+        } catch (err) {
+            // ignore
+        }
+    }
+}
+
+function dispatchTextToGame(text) {
+    for (const char of text) {
+        dispatchKeyToTargets("keydown", char);
+        dispatchKeyToTargets("keypress", char);
+        dispatchKeyToTargets("keyup", char);
+    }
+}
+
+function forwardKeyboardEventToGame(event) {
+    if (!document.body.classList.contains("is-playing")) return;
+
+    const specialKeys = new Set([
+        "Backspace", "Enter", "Tab", "Escape", "Delete",
+        "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+        "Home", "End", "PageUp", "PageDown", " "
+    ]);
+
+    if (event.type === "keydown" || event.type === "keyup") {
+        if (event.key.length === 1 && event.key !== " ") return;
+        if (!specialKeys.has(event.key)) return;
+
+        dispatchKeyToTargets(event.type, event.key, event);
+        event.preventDefault();
+        return;
+    }
+}
+
+function handleKeyboardProxyBeforeInput(event) {
+    if (!document.body.classList.contains("is-playing")) return;
+
+    if (event.inputType === "deleteContentBackward") {
+        dispatchKeyToTargets("keydown", "Backspace", event);
+        dispatchKeyToTargets("keyup", "Backspace", event);
+        keyboardProxy.value = "";
+        event.preventDefault();
+        return;
+    }
+
+    if (event.inputType === "insertLineBreak") {
+        dispatchKeyToTargets("keydown", "Enter", event);
+        dispatchKeyToTargets("keyup", "Enter", event);
+        keyboardProxy.value = "";
+        event.preventDefault();
+    }
+}
+
+function handleKeyboardProxyInput() {
+    if (!document.body.classList.contains("is-playing")) {
+        keyboardProxy.value = "";
+        return;
+    }
+
+    const value = keyboardProxy.value;
+    if (value) {
+        dispatchTextToGame(value);
+        keyboardProxy.value = "";
+    }
+}
+
+function openMobileKeyboard() {
+    if (!document.body.classList.contains("is-playing") || !isMobileDevice()) return;
+
+    keyboardProxy.value = "";
+    setKeyboardOpen(true);
+
+    try {
+        keyboardProxy.focus({ preventScroll: true });
+    } catch (err) {
+        keyboardProxy.focus();
+    }
+
+    window.setTimeout(() => {
+        try {
+            keyboardProxy.focus({ preventScroll: true });
+        } catch (err) {
+            keyboardProxy.focus();
+        }
+    }, 0);
+}
+
+function toggleMobileKeyboard() {
+    if (!document.body.classList.contains("is-playing") || !isMobileDevice()) return;
+
+    if (document.activeElement === keyboardProxy || keyboardOpen) {
+        keyboardProxy.blur();
+        keyboardProxy.value = "";
+        setKeyboardOpen(false);
+        focusGameSurface();
+        return;
+    }
+
+    openMobileKeyboard();
+}
+
+function updateFullscreenButtonState() {
+    const fullscreen = isGameFullscreen();
+    fullscreenButton.setAttribute("aria-label", fullscreen ? "Exit fullscreen" : "Toggle fullscreen");
+    fullscreenButton.setAttribute("title", fullscreen ? "Exit fullscreen" : "Fullscreen");
+}
+
+function positionControlButtons() {
+    const host = isGameFullscreen() ? viewerControls : topbarRight;
+    if (fullscreenButton.parentElement !== host) {
+        host.appendChild(fullscreenButton);
+    }
+    if (keyboardButton.parentElement !== host) {
+        host.appendChild(keyboardButton);
+    }
+}
+
+function updateGameViewport() {
+    const keyboardInset = keyboardOpen && isMobileDevice() && document.body.classList.contains("is-playing")
+        ? (() => {
+            const vv = window.visualViewport;
+            if (!vv) return 0;
+            return Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+        })()
+        : 0;
+
+    viewer.style.bottom = `${keyboardInset}px`;
+
+    if (isGameFullscreen()) {
+        viewer.style.top = "0px";
+    } else {
+        viewer.style.top = "";
+    }
+
+    if (currentMode === "flash") {
+        requestAnimationFrame(() => applyFlashScale());
+    }
+}
+
+function updateControlVisibility() {
+    const playing = document.body.classList.contains("is-playing");
+    const fullscreen = isGameFullscreen();
+    const mobile = isMobileDevice();
+
+    positionControlButtons();
+    updateFullscreenButtonState();
+
+    topbarRight.style.display = playing && !fullscreen ? "flex" : "none";
+    viewerControls.style.display = playing && fullscreen ? "flex" : "none";
+    fullscreenButton.style.display = playing ? "inline-flex" : "none";
+    keyboardButton.style.display = playing && mobile ? "inline-flex" : "none";
+
+    updateGameViewport();
+}
+
+function syncChromeState() {
+    updateTopbarHeight();
+    updateTitleText();
+    updateSearchClearState();
+    updateControlVisibility();
 }
 
 function parseConfig(text) {
@@ -1073,99 +1284,6 @@ function clearViewerContent() {
     currentFlashPlayer = null;
 }
 
-function cloneKeyboardEvent(source, type) {
-    return new KeyboardEvent(type, {
-        key: source.key,
-        code: source.code,
-        location: source.location,
-        ctrlKey: source.ctrlKey,
-        shiftKey: source.shiftKey,
-        altKey: source.altKey,
-        metaKey: source.metaKey,
-        repeat: source.repeat,
-        bubbles: true,
-        cancelable: true
-    });
-}
-
-function forwardKeyboardEventToGame(event) {
-    if (!document.body.classList.contains("is-playing")) return;
-
-    const cloned = cloneKeyboardEvent(event, event.type);
-
-    try {
-        if (currentMode === "flash" && currentFlashPlayer) {
-            currentFlashPlayer.dispatchEvent(cloned);
-        } else if (currentMode === "html" && frame.contentWindow) {
-            frame.contentWindow.dispatchEvent(cloned);
-        }
-    } catch (err) {
-        // Cross-origin or unsupported target; ignore safely.
-    }
-}
-
-function openMobileKeyboard() {
-    if (!document.body.classList.contains("is-playing")) return;
-
-    keyboardProxy.value = "";
-    keyboardProxy.focus({ preventScroll: true });
-    setTimeout(() => keyboardProxy.focus({ preventScroll: true }), 0);
-}
-
-async function enterFullscreenMode() {
-    const target = viewer;
-
-    try {
-        if (target.requestFullscreen) {
-            await target.requestFullscreen({ navigationUI: "hide" });
-            return;
-        }
-        if (target.webkitRequestFullscreen) {
-            target.webkitRequestFullscreen();
-            return;
-        }
-    } catch (err) {
-        console.warn(err);
-    }
-
-    document.body.classList.add("fake-fullscreen");
-    moveGameControls();
-    updateTopbarHeight();
-    requestAnimationFrame(() => {
-        if (currentMode === "flash") applyFlashScale();
-    });
-}
-
-async function exitFullscreenMode() {
-    try {
-        if (document.fullscreenElement && document.exitFullscreen) {
-            await document.exitFullscreen();
-            return;
-        }
-        if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-            return;
-        }
-    } catch (err) {
-        console.warn(err);
-    }
-
-    document.body.classList.remove("fake-fullscreen");
-    moveGameControls();
-    updateTopbarHeight();
-    requestAnimationFrame(() => {
-        if (currentMode === "flash") applyFlashScale();
-    });
-}
-
-function toggleFullscreenMode() {
-    if (isGameFullscreen()) {
-        exitFullscreenMode();
-    } else {
-        enterFullscreenMode();
-    }
-}
-
 const FLASH_BASE_W = 800;
 const FLASH_BASE_H = 600;
 
@@ -1209,6 +1327,7 @@ function openGame(url, title) {
     updateTitleText();
 
     clearViewerContent();
+    syncChromeState();
 
     if (isFlashGame(url) && window.RufflePlayer) {
         currentMode = "flash";
@@ -1223,20 +1342,15 @@ function openGame(url, title) {
 
         player.style.width = "100%";
         player.style.height = "100%";
-        player.tabIndex = -1;
 
         ruffleContainer.appendChild(player);
-        currentFlashPlayer = player;
         player.load(url);
+        currentFlashPlayer = player;
 
         setupFlashResizeTracking();
-        requestAnimationFrame(() => {
-            applyFlashScale();
-            try { player.focus({ preventScroll: true }); } catch (err) {}
-        });
+        requestAnimationFrame(() => applyFlashScale());
     } else {
         currentMode = "html";
-        currentFlashPlayer = null;
         gameShell.classList.remove("flash-shell");
         gameShell.classList.add("html-shell");
 
@@ -1244,13 +1358,33 @@ function openGame(url, title) {
         frame.style.display = "block";
         gameShell.style.transform = "none";
         frame.src = url;
+        requestAnimationFrame(() => {
+            if (!keyboardOpen) focusGameSurface();
+        });
     }
 
-    moveGameControls();
-    updateTopbarHeight();
+    syncChromeState();
+}
+
+function closeFullscreenMode() {
+    if (document.body.classList.contains("fake-fullscreen")) {
+        document.body.classList.remove("fake-fullscreen");
+        syncChromeState();
+        return;
+    }
+
+    if (document.fullscreenElement === viewer && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+        return;
+    }
+
+    if (document.webkitFullscreenElement === viewer && document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
 }
 
 function closeGame() {
+    closeFullscreenMode();
     viewer.style.display = "none";
     clearViewerContent();
 
@@ -1267,9 +1401,11 @@ function closeGame() {
     currentMode = "html";
     currentFlashPlayer = null;
     keyboardProxy.blur();
+    keyboardProxy.value = "";
+    setKeyboardOpen(false);
     updateTitleText();
-    moveGameControls();
     updateTopbarHeight();
+    syncChromeState();
     if (flashResizeObserver) {
         flashResizeObserver.disconnect();
         flashResizeObserver = null;
@@ -1280,7 +1416,6 @@ function syncResponsiveState() {
     moveSearchBarForLayout();
     updateTitleText();
     updateSearchClearState();
-    moveGameControls();
     updateTopbarHeight();
 
     if (!isMobileLayout()) {
@@ -1290,16 +1425,13 @@ function syncResponsiveState() {
     if (viewer.style.display !== "block") {
         document.body.classList.remove("is-playing");
     }
+
+    syncChromeState();
 }
 
 homeButton.addEventListener("click", closeGame);
 menuButton.addEventListener("click", toggleNav);
 navBackdrop.addEventListener("click", closeNav);
-fullscreenButton.addEventListener("click", toggleFullscreenMode);
-keyboardButton.addEventListener("click", openMobileKeyboard);
-keyboardProxy.addEventListener("keydown", forwardKeyboardEventToGame);
-keyboardProxy.addEventListener("keyup", forwardKeyboardEventToGame);
-keyboardProxy.addEventListener("keypress", forwardKeyboardEventToGame);
 searchBox.addEventListener("input", () => {
     updateSearchClearState();
     renderGames();
@@ -1317,22 +1449,56 @@ allCatButton.addEventListener("click", () => {
 });
 window.addEventListener("resize", syncResponsiveState);
 mobileQuery.addEventListener("change", syncResponsiveState);
-document.addEventListener("fullscreenchange", () => {
-    document.body.classList.remove("fake-fullscreen");
-    moveGameControls();
-    updateTopbarHeight();
-    requestAnimationFrame(() => {
-        if (currentMode === "flash") applyFlashScale();
-    });
+mobileDeviceQuery.addEventListener("change", syncChromeState);
+fullscreenButton.addEventListener("click", toggleFullscreenMode);
+keyboardButton.addEventListener("click", toggleMobileKeyboard);
+keyboardProxy.addEventListener("focus", () => setKeyboardOpen(true));
+keyboardProxy.addEventListener("blur", () => {
+    keyboardProxy.value = "";
+    setKeyboardOpen(false);
+    if (document.body.classList.contains("is-playing")) {
+        focusGameSurface();
+    }
 });
-document.addEventListener("webkitfullscreenchange", () => {
-    document.body.classList.remove("fake-fullscreen");
-    moveGameControls();
-    updateTopbarHeight();
-    requestAnimationFrame(() => {
-        if (currentMode === "flash") applyFlashScale();
-    });
-});
+keyboardProxy.addEventListener("beforeinput", handleKeyboardProxyBeforeInput);
+keyboardProxy.addEventListener("input", handleKeyboardProxyInput);
+keyboardProxy.addEventListener("keydown", forwardKeyboardEventToGame);
+keyboardProxy.addEventListener("keyup", forwardKeyboardEventToGame);
+
+document.addEventListener("fullscreenchange", syncChromeState);
+document.addEventListener("webkitfullscreenchange", syncChromeState);
+if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", updateGameViewport);
+    window.visualViewport.addEventListener("scroll", updateGameViewport);
+}
+
+async function toggleFullscreenMode() {
+    if (isGameFullscreen()) {
+        closeFullscreenMode();
+        return;
+    }
+
+    if (viewer.requestFullscreen) {
+        try {
+            await viewer.requestFullscreen();
+            return;
+        } catch (err) {
+            // fallback below
+        }
+    }
+
+    if (viewer.webkitRequestFullscreen) {
+        try {
+            await viewer.webkitRequestFullscreen();
+            return;
+        } catch (err) {
+            // fallback below
+        }
+    }
+
+    document.body.classList.add("fake-fullscreen");
+    syncChromeState();
+}
 
 async function loadConfig() {
     try {
