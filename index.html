@@ -1083,17 +1083,16 @@ function mobilePhoneSVG() {
 
 function inputMeta(type) {
     const map = {
-        keyboard: { label: "keyboard", icons: ["keyboard"] },
-        mouse: { label: "mouse", icons: ["mouse"] },
-        touch: { label: "touch", icons: ["touch"] },
-        "keyboard+mouse": { label: "keyboard and mouse", icons: ["keyboard", "mouse"] },
-        "keyboard+touch": { label: "keyboard and touch", icons: ["keyboard", "touch"] },
-        "mouse+touch": { label: "mouse and touch", icons: ["mouse", "touch"] },
-        all: { label: "keyboard, mouse, and touch", icons: ["keyboard", "mouse", "touch"] }
+        keyboard: { icons: ["keyboard"] },
+        mouse: { icons: ["mouse"] },
+        touch: { icons: ["touch"] },
+        "keyboard+mouse": { icons: ["keyboard", "mouse"] },
+        "keyboard+touch": { icons: ["keyboard", "touch"] },
+        "mouse+touch": { icons: ["mouse", "touch"] },
+        all: { icons: ["keyboard", "mouse", "touch"] }
     };
 
     return map[type] || {
-        label: type || "unknown",
         icons: ["touch"]
     };
 }
