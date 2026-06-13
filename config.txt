@@ -143,7 +143,7 @@ input|all
 title|The Impossible Quiz
 desc|Answer a series of deceptive and unconventional questions where logic is often misleading and creative interpretation is required.
 img|https://freewebgames.github.io/Assets/TheImpossibleQuiz.png
-url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz.swf
+url|https://freewebgames.github.io/Flash/TheImpossibleQuiz.swf
 cat|Puzzle, Humor
 input|mouse+touch
 mobile|yes
@@ -151,7 +151,7 @@ mobile|yes
 title|The Impossible Quiz 2
 desc|Solve increasingly unpredictable quiz challenges filled with trick answers, hidden rules, and unconventional logic puzzles.
 img|https://freewebgames.github.io/Assets/TheImpossibleQuiz2.jpg
-url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz%202.swf
+url|https://freewebgames.github.io/Flash/TheImpossibleQuiz2.swf
 cat|Puzzle, Humor
 input|mouse+touch
 mobile|yes
