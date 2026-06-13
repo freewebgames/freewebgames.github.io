@@ -24,6 +24,7 @@ cat|Simulation, Story, Indie, Endless
 input|mouse+touch
 creator_name|Orteil
 creator_url|https://store.steampowered.com/app/1454400/Cookie_Clicker/
+mobile|yes
 
 title|Eggy Car
 desc|Eggy Car is a fun driving game where you cruise over bumpy hills and tricky terrain while trying to keep a fragile egg balanced on top of your car.
@@ -31,6 +32,7 @@ img|https://freewebgames.github.io/Assets/EggyCar.jpg
 url|https://freewebgames.github.io/HTML/Eggy%20Car.html
 cat|Physics, Endless
 input|all
+mobile|yes
 
 title|Moto X3M 3
 desc|Moto X3M 3 is the third entry in the Moto X3M series, delivering high-speed motorcycle stunt action as you race through wild obstacle courses, pull off flips, and push for the fastest times.
@@ -45,6 +47,7 @@ img|https://freewebgames.github.io/Assets/IdleBreakout.jpg
 url|https://freewebgames.github.io/HTML/idlebreakout.html
 cat|idle, Physics, Tycoon
 input|mouse+touch
+mobile|yes
 
 title|Paper.io
 desc|Paper.io is a competitive territory-capture game where you expand your area by drawing loops, outmaneuvering opponents, and avoiding collisions to dominate the map.
@@ -52,6 +55,7 @@ img|https://freewebgames.github.io/Assets/Paperio.jpg
 url|https://freewebgames.github.io/HTML/Paper.io.html
 cat|Survival, Action
 input|all
+mobile|yes
 
 title|Bloons TD 5
 desc|Bloons TD 5 is a classic tower defense game where you deploy powerful monkey towers, unlock upgrades, and stop endless waves of colorful bloons from reaching the end of the track.
@@ -61,6 +65,7 @@ cat|Tower Defense, Strategy
 input|mouse+touch
 creator_name|Ninja Kiwi
 creator_url|https://store.steampowered.com/app/306020/Bloons_TD_5/
+mobile|yes
 
 title|Duck Life
 desc|Train a duck across running, swimming, and flying challenges, then compete in races to earn money and unlock upgrades that improve performance.
@@ -96,6 +101,7 @@ img|https://freewebgames.github.io/Assets/AgeOfWar.png
 url|https://freewebgames.github.io/Flash/age_of_war.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
+mobile|yes
 
 title|Age of War 2
 desc|Manage resources and deploy units across evolving eras, balancing offense and defense to destroy the opposing base.
@@ -103,6 +109,7 @@ img|https://freewebgames.github.io/Assets/AgeofWar2.jpg
 url|https://freewebgames.github.io/Flash/age-of-war-2-publicOTM3.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
+mobile|yes
 
 title|Age of War 3
 desc|Command advanced units and technologies across multiple ages while pushing forward to overwhelm enemy defenses in large-scale battles.
@@ -110,6 +117,7 @@ img|
 url|https://freewebgames.github.io/Flash/Age_Of_War_3.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
+mobile|yes
 
 title|Learn to Fly
 desc|Launch a penguin and use earned upgrades to increase distance, improve momentum, and gradually achieve longer airborne runs.
@@ -138,6 +146,7 @@ img|https://freewebgames.github.io/Assets/TheImpossibleQuiz.png
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz.swf
 cat|Puzzle, Humor
 input|mouse+touch
+mobile|yes
 
 title|The Impossible Quiz 2
 desc|Solve increasingly unpredictable quiz challenges filled with trick answers, hidden rules, and unconventional logic puzzles.
@@ -145,3 +154,4 @@ img|https://freewebgames.github.io/Assets/TheImpossibleQuiz2.jpg
 url|https://freewebgames.github.io/Flash/The%20Impossible%20Quiz%202.swf
 cat|Puzzle, Humor
 input|mouse+touch
+mobile|yes
