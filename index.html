@@ -740,7 +740,7 @@ body.is-playing .mobile-search-row{
         <div id="ruffleContainer"></div>
     </div>
 </div>
-<textarea id="keyboardProxy" class="keyboard-proxy" aria-hidden="true" tabindex="-1" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+<textarea id="keyboardProxy" class="keyboard-proxy" aria-hidden="true" tabindex="-1" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
 
 <script>
 let games = [];
@@ -943,6 +943,10 @@ function dispatchTextToGame(text) {
         dispatchKeyToTargets("keydown", char);
         dispatchKeyToTargets("keypress", char);
         dispatchKeyToTargets("keyup", char);
+    }
+
+    if (document.body.classList.contains("is-playing") && keyboardOpen) {
+        focusGameSurface();
     }
 }
 
@@ -1279,9 +1283,22 @@ function isFlashGame(url) {
 }
 
 function clearViewerContent() {
-    frame.src = "";
-    ruffleContainer.innerHTML = "";
+    frame.src = "about:blank";
+    ruffleContainer.replaceChildren();
     currentFlashPlayer = null;
+}
+
+function stopGameSession() {
+    keyboardProxy.blur();
+    keyboardProxy.value = "";
+    setKeyboardOpen(false);
+
+    if (flashResizeObserver) {
+        flashResizeObserver.disconnect();
+        flashResizeObserver = null;
+    }
+
+    clearViewerContent();
 }
 
 const FLASH_BASE_W = 800;
@@ -1385,8 +1402,8 @@ function closeFullscreenMode() {
 
 function closeGame() {
     closeFullscreenMode();
+    stopGameSession();
     viewer.style.display = "none";
-    clearViewerContent();
 
     frame.style.display = "block";
     ruffleContainer.style.display = "none";
@@ -1399,17 +1416,9 @@ function closeGame() {
     document.body.classList.remove("is-playing");
     closeNav();
     currentMode = "html";
-    currentFlashPlayer = null;
-    keyboardProxy.blur();
-    keyboardProxy.value = "";
-    setKeyboardOpen(false);
     updateTitleText();
     updateTopbarHeight();
     syncChromeState();
-    if (flashResizeObserver) {
-        flashResizeObserver.disconnect();
-        flashResizeObserver = null;
-    }
 }
 
 function syncResponsiveState() {
@@ -1467,6 +1476,16 @@ keyboardProxy.addEventListener("keyup", forwardKeyboardEventToGame);
 
 document.addEventListener("fullscreenchange", syncChromeState);
 document.addEventListener("webkitfullscreenchange", syncChromeState);
+function hardStopGameOnUnload() {
+    try {
+        stopGameSession();
+    } catch (err) {
+        // ignore
+    }
+}
+
+window.addEventListener("pagehide", hardStopGameOnUnload);
+window.addEventListener("beforeunload", hardStopGameOnUnload);
 if (window.visualViewport) {
     window.visualViewport.addEventListener("resize", updateGameViewport);
     window.visualViewport.addEventListener("scroll", updateGameViewport);
