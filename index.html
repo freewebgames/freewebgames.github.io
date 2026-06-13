@@ -388,8 +388,8 @@ body{
 .mobile-badge{
     display:flex;
     align-items:center;
-    gap:8px;
-    padding:6px 10px;
+    gap:6px;
+    padding:6px 8px;
     border-radius:999px;
     background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.08);
@@ -1158,7 +1158,11 @@ function renderGames() {
     filtered.forEach(g => {
         const meta = inputMeta(g.input);
         const mobileFriendly = g.mobile === "yes";
-        const showMobileBadge = mobileFriendly && isMobileDevice();
+        const showMobileTouchIcon = mobileFriendly && isMobileDevice();
+        const badgeIcons = [...meta.icons];
+        if (showMobileTouchIcon && !badgeIcons.includes("touch")) {
+            badgeIcons.push("touch");
+        }
 
         const card = document.createElement("div");
         card.className = "game-card";
@@ -1169,26 +1173,17 @@ function renderGames() {
                </a>`
             : "";
 
-        const mobileBadgeHTML = showMobileBadge
-            ? `<div class="mobile-badge" title="Mobile friendly">
-                   <span aria-hidden="true">${mobilePhoneSVG()}</span>
-                   <span>mobile friendly</span>
-               </div>`
-            : "";
-
         card.innerHTML = `
             <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
             <div class="game-info">
                 <div class="game-toprow">
                     <div class="game-title">${g.title || ""}</div>
                     <div class="badge-stack">
-                        <div class="input-badge" title="${meta.label}">
+                        <div class="input-badge" title="${badgeIcons.join(", ")}">
                             <span class="input-icons" aria-hidden="true">
-                                ${meta.icons.map(i => iconSVG(i)).join("")}
+                                ${badgeIcons.map(i => iconSVG(i)).join("")}
                             </span>
-                            <span>${meta.label}</span>
                         </div>
-                        ${mobileBadgeHTML}
                     </div>
                 </div>
                 <div class="game-desc">${g.desc || ""}</div>
