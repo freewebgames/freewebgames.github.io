@@ -1157,8 +1157,10 @@ function renderGames() {
 
     filtered.forEach(g => {
         const meta = inputMeta(g.input);
+
         const mobileFriendly = g.mobile === "yes";
         const showMobileTouchIcon = mobileFriendly && isMobileDevice();
+
         const badgeIcons = [...meta.icons];
         if (showMobileTouchIcon && !badgeIcons.includes("touch")) {
             badgeIcons.push("touch");
@@ -1173,20 +1175,46 @@ function renderGames() {
                </a>`
             : "";
 
+        const hasMobileBadge = mobileFriendly;
+
+        const inputBadgeHTML = `
+            <div class="input-badge ${hasMobileBadge ? "has-mobile" : ""}"
+                 title="${[
+                    ...badgeIcons,
+                    hasMobileBadge ? "mobile friendly" : ""
+                 ].filter(Boolean).join(", ")}">
+
+                <span class="input-icons" aria-hidden="true">
+                    ${badgeIcons.map(i => iconSVG(i)).join("")}
+                </span>
+
+                ${
+                    hasMobileBadge
+                        ? `
+                            <span class="badge-divider" aria-hidden="true">•</span>
+                            <span class="mobile-badge-inline" title="Mobile friendly">
+                                <span aria-hidden="true">${mobilePhoneSVG()}</span>
+                                <span class="mobile-text">mobile</span>
+                            </span>
+                        `
+                        : ""
+                }
+            </div>
+        `;
+
         card.innerHTML = `
             <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
             <div class="game-info">
                 <div class="game-toprow">
                     <div class="game-title">${g.title || ""}</div>
+
                     <div class="badge-stack">
-                        <div class="input-badge" title="${badgeIcons.join(", ")}">
-                            <span class="input-icons" aria-hidden="true">
-                                ${badgeIcons.map(i => iconSVG(i)).join("")}
-                            </span>
-                        </div>
+                        ${inputBadgeHTML}
                     </div>
                 </div>
+
                 <div class="game-desc">${g.desc || ""}</div>
+
                 <div class="action-row">
                     <button class="play-button" type="button">Play</button>
                     ${supportButtonHTML}
