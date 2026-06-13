@@ -918,14 +918,36 @@ function clearViewerContent() {
     ruffleContainer.innerHTML = "";
 }
 
-function updateFlashScale() {
-    if (currentMode !== "flash") return;
+const FLASH_BASE_W = 800;
+const FLASH_BASE_H = 600;
 
+let flashResizeObserver = null;
+
+function calculateFlashScale() {
     const availableW = viewer.clientWidth;
     const availableH = viewer.clientHeight;
 
-    const scale = Math.min(availableW / 800, availableH / 600);
+    const scaleX = availableW / FLASH_BASE_W;
+    const scaleY = availableH / FLASH_BASE_H;
+
+    return Math.min(scaleX, scaleY, 1);
+}
+
+function applyFlashScale() {
+    if (currentMode !== "flash") return;
+
+    const scale = calculateFlashScale();
     gameShell.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+
+function setupFlashResizeTracking() {
+    if (flashResizeObserver) return;
+
+    flashResizeObserver = new ResizeObserver(() => {
+        applyFlashScale();
+    });
+
+    flashResizeObserver.observe(viewer);
 }
 
 function openGame(url, title) {
@@ -955,7 +977,8 @@ function openGame(url, title) {
         ruffleContainer.appendChild(player);
         player.load(url);
 
-        updateFlashScale();
+        setupFlashResizeTracking();
+        requestAnimationFrame(() => applyFlashScale());
     } else {
         currentMode = "html";
         gameShell.classList.remove("flash-shell");
@@ -987,6 +1010,10 @@ function closeGame() {
     currentMode = "html";
     updateTitleText();
     updateTopbarHeight();
+    if (flashResizeObserver) {
+        flashResizeObserver.disconnect();
+        flashResizeObserver = null;
+    }
 }
 
 function syncResponsiveState() {
@@ -1022,7 +1049,6 @@ allCatButton.addEventListener("click", () => {
     setActiveCategory("all");
     renderGames();
 });
-window.addEventListener("resize", updateFlashScale);
 window.addEventListener("resize", syncResponsiveState);
 mobileQuery.addEventListener("change", syncResponsiveState);
 
