@@ -111,9 +111,9 @@ cat|Strategy, Combat, Base Defense
 input|mouse+touch
 mobile|yes
 
-title|Age of War 3
-desc|Command advanced units and technologies across multiple ages while pushing forward to overwhelm enemy defenses in large-scale battles.
-img|
+title|Army of Ages
+desc|Command advanced units and technologies across multiple ages while pushing forward to overwhelm the aliens in a continuous battle for freedom.
+img|https://freewebgames.github.io/Assets/ArmyofAges.jpg
 url|https://freewebgames.github.io/Flash/Age_Of_War_3.swf
 cat|Strategy, Combat, Base Defense
 input|mouse+touch
