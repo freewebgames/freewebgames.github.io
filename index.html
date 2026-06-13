@@ -930,7 +930,9 @@ function calculateFlashScale() {
     const scaleX = availableW / FLASH_BASE_W;
     const scaleY = availableH / FLASH_BASE_H;
 
-    return Math.min(scaleX, scaleY, 1);
+    const scale = Math.min(scaleX, scaleY);
+
+    return Math.min(scale, 3);
 }
 
 function applyFlashScale() {
