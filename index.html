@@ -169,8 +169,9 @@ body{
     align-items:center;
     justify-content:center;
     box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
-    padding:0;
     flex-shrink:0;
+    padding:0;
+    line-height:0;
 }
 
 .control-button:hover{
@@ -188,16 +189,6 @@ body{
     stroke-linejoin:round;
 }
 
-.viewer-controls{
-    position:absolute;
-    top:12px;
-    right:12px;
-    display:none;
-    gap:10px;
-    z-index:50;
-    pointer-events:auto;
-}
-
 .keyboard-proxy{
     position:fixed;
     left:-9999px;
@@ -206,16 +197,6 @@ body{
     height:1px;
     opacity:0;
     pointer-events:none;
-}
-
-body.fake-fullscreen .topbar,
-body.fake-fullscreen .main,
-body.fake-fullscreen .backdrop{
-    display:none;
-}
-
-body.fake-fullscreen .viewer{
-    top:0;
 }
 
 .mobile-search-row{
@@ -376,27 +357,31 @@ body.fake-fullscreen .viewer{
 
 .game-toprow{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:space-between;
-    gap:14px;
-    margin-bottom:8px;
+    gap:10px 14px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
 }
 
 .game-title{
+    flex:1 1 240px;
+    min-width:0;
     font-size:1.25rem;
     color:#fff;
     font-weight:700;
     line-height:1.2;
-    min-width:0;
+    overflow-wrap:anywhere;
 }
 
 .badge-stack{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     gap:8px;
     flex-wrap:wrap;
     justify-content:flex-end;
-    flex-shrink:0;
+    flex:0 1 auto;
+    max-width:100%;
 }
 
 .input-badge,
@@ -411,6 +396,7 @@ body.fake-fullscreen .viewer{
     color:#b8c7d6;
     font-size:.88rem;
     white-space:nowrap;
+    max-width:100%;
 }
 
 .input-icons{
@@ -591,11 +577,6 @@ body.is-playing .mobile-search-row{
         font-size:.9rem;
     }
 
-    .control-button{
-        width:38px;
-        height:38px;
-    }
-
     .mobile-search-row{
         display:block;
         width:100%;
@@ -667,6 +648,7 @@ body.is-playing .mobile-search-row{
     .input-badge,
     .mobile-badge{
         width:fit-content;
+        max-width:100%;
     }
 
     .footer{
@@ -691,14 +673,6 @@ body.is-playing .mobile-search-row{
         </div>
         <div class="topbar-right" id="topbarRight">
             <button class="back-button" id="homeButton" type="button">Back To Library</button>
-            <button class="control-button fullscreen-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Fullscreen">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M8 3H3v5"></path>
-                    <path d="M16 3h5v5"></path>
-                    <path d="M8 21H3v-5"></path>
-                    <path d="M21 16v5h-5"></path>
-                </svg>
-            </button>
             <button class="control-button keyboard-button" id="keyboardButton" type="button" aria-label="Open keyboard" title="Open keyboard">
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <rect x="3" y="6" width="18" height="12" rx="2"></rect>
@@ -734,13 +708,13 @@ body.is-playing .mobile-search-row{
 <div class="backdrop" id="navBackdrop"></div>
 
 <div class="viewer" id="viewer">
-    <div class="viewer-controls" id="viewerControls"></div>
     <div id="gameShell" class="game-shell html-shell">
         <iframe id="gameFrame" title="Game frame"></iframe>
         <div id="ruffleContainer"></div>
     </div>
 </div>
-<textarea id="keyboardProxy" class="keyboard-proxy" aria-hidden="true" tabindex="-1" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+
+<textarea id="keyboardProxy" class="keyboard-proxy" aria-hidden="true" tabindex="-1" autocomplete="off" autocapitalize="none" spellcheck="false"></textarea>
 
 <script>
 let games = [];
@@ -758,21 +732,18 @@ const frame = document.getElementById("gameFrame");
 const ruffleContainer = document.getElementById("ruffleContainer");
 const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
+const keyboardButton = document.getElementById("keyboardButton");
+const keyboardProxy = document.getElementById("keyboardProxy");
+const topbarRight = document.getElementById("topbarRight");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
 const menuButton = document.getElementById("menuButton");
 const navBackdrop = document.getElementById("navBackdrop");
 const mobileSearchRow = document.getElementById("mobileSearchRow");
 const desktopHeaderRow = document.getElementById("desktopHeaderRow");
-const topbarRight = document.getElementById("topbarRight");
-const viewerControls = document.getElementById("viewerControls");
-const fullscreenButton = document.getElementById("fullscreenButton");
-const keyboardButton = document.getElementById("keyboardButton");
-const keyboardProxy = document.getElementById("keyboardProxy");
 const mobileQuery = window.matchMedia("(max-width: 767px)");
 const mobileDeviceQuery = window.matchMedia("(pointer: coarse) and (hover: none)");
 
 let currentMode = "html";
-let currentFlashPlayer = null;
 let keyboardOpen = false;
 
 function isMobileLayout() {
@@ -832,10 +803,8 @@ function isMobileDevice() {
     return mobileDeviceQuery.matches;
 }
 
-function isGameFullscreen() {
-    return document.fullscreenElement === viewer ||
-        document.webkitFullscreenElement === viewer ||
-        document.body.classList.contains("fake-fullscreen");
+function isHtmlGameOpen() {
+    return viewer.style.display === "block" && currentMode === "html";
 }
 
 function codeForKey(key) {
@@ -865,68 +834,6 @@ function codeForKey(key) {
     return map[key] || "";
 }
 
-function setKeyboardOpen(open) {
-    keyboardOpen = open;
-    document.body.classList.toggle("keyboard-open", open);
-    updateGameViewport();
-}
-
-function focusGameSurface() {
-    if (currentMode === "flash" && currentFlashPlayer && typeof currentFlashPlayer.focus === "function") {
-        try {
-            currentFlashPlayer.focus();
-            return;
-        } catch (err) {
-            // fall through
-        }
-    }
-
-    try {
-        frame.focus({ preventScroll: true });
-    } catch (err) {
-        try {
-            frame.focus();
-        } catch (err2) {
-            // ignore
-        }
-    }
-}
-
-function getKeyboardTargets() {
-    const targets = [];
-
-    if (currentMode === "flash") {
-        if (currentFlashPlayer) targets.push(currentFlashPlayer);
-        const flashDoc = currentFlashPlayer && currentFlashPlayer.ownerDocument ? currentFlashPlayer.ownerDocument : null;
-        if (flashDoc) {
-            targets.push(flashDoc);
-            if (flashDoc.defaultView) targets.push(flashDoc.defaultView);
-        }
-        targets.push(window);
-        return [...new Set(targets.filter(Boolean))];
-    }
-
-    try {
-        if (frame.contentDocument) {
-            targets.push(frame.contentDocument);
-            if (frame.contentDocument.body) targets.push(frame.contentDocument.body);
-            if (frame.contentDocument.documentElement) targets.push(frame.contentDocument.documentElement);
-            if (frame.contentDocument.defaultView) targets.push(frame.contentDocument.defaultView);
-        }
-    } catch (err) {
-        // cross-origin iframe or not ready
-    }
-
-    try {
-        if (frame.contentWindow) targets.push(frame.contentWindow);
-    } catch (err) {
-        // cross-origin iframe or not ready
-    }
-
-    targets.push(window);
-    return [...new Set(targets.filter(Boolean))];
-}
-
 function legacyKeyCodeForKey(key) {
     if (key === " ") return 32;
     if (key.length === 1) return key.toUpperCase().charCodeAt(0);
@@ -938,8 +845,8 @@ function legacyKeyCodeForKey(key) {
         Escape: 27,
         Delete: 46,
         ArrowLeft: 37,
-        ArrowRight: 39,
         ArrowUp: 38,
+        ArrowRight: 39,
         ArrowDown: 40,
         Home: 36,
         End: 35,
@@ -950,26 +857,26 @@ function legacyKeyCodeForKey(key) {
     return map[key] || 0;
 }
 
-function legacyCharCodeForKey(type, key) {
-    if (type === "keypress") {
-        if (key.length === 1) return key.charCodeAt(0);
-        if (key === " ") return 32;
+function getKeyboardTargets() {
+    const targets = [];
+
+    try {
+        if (frame.contentWindow) targets.push(frame.contentWindow);
+    } catch (err) {
+        // cross-origin or not ready
     }
 
-    const map = {
-        Enter: 13,
-        Backspace: 8,
-        Tab: 9,
-        Escape: 27,
-        Delete: 46
-    };
+    try {
+        if (frame.contentDocument) targets.push(frame.contentDocument);
+    } catch (err) {
+        // cross-origin or not ready
+    }
 
-    return map[key] || 0;
+    targets.push(window);
+    return targets;
 }
 
-function createLegacyKeyboardEvent(type, key, sourceEvent = {}) {
-    const keyCode = sourceEvent.keyCode || legacyKeyCodeForKey(key);
-    const charCode = sourceEvent.charCode || legacyCharCodeForKey(type, key);
+function dispatchKeyToTargets(type, key, sourceEvent = {}) {
     const eventInit = {
         key,
         code: sourceEvent.code || codeForKey(key),
@@ -982,36 +889,16 @@ function createLegacyKeyboardEvent(type, key, sourceEvent = {}) {
         bubbles: true,
         cancelable: true,
         composed: true,
-        view: sourceEvent.view || window
+        keyCode: sourceEvent.keyCode || legacyKeyCodeForKey(key),
+        charCode: sourceEvent.charCode || (type === "keypress" && key.length === 1 ? key.charCodeAt(0) : 0),
+        which: sourceEvent.which || legacyKeyCodeForKey(key)
     };
 
-    const event = new KeyboardEvent(type, eventInit);
-
-    const legacyProps = {
-        keyCode,
-        which: type === "keypress" ? (charCode || keyCode) : keyCode,
-        charCode: type === "keypress" ? charCode : 0
-    };
-
-    for (const [prop, value] of Object.entries(legacyProps)) {
-        try {
-            Object.defineProperty(event, prop, {
-                get: () => value
-            });
-        } catch (err) {
-            // ignore read-only environments
-        }
-    }
-
-    return event;
-}
-
-function dispatchKeyToTargets(type, key, sourceEvent = {}) {
     const targets = getKeyboardTargets();
-
     for (const target of targets) {
         try {
-            target.dispatchEvent(createLegacyKeyboardEvent(type, key, sourceEvent));
+            const event = new KeyboardEvent(type, eventInit);
+            target.dispatchEvent(event);
         } catch (err) {
             // ignore
         }
@@ -1020,52 +907,40 @@ function dispatchKeyToTargets(type, key, sourceEvent = {}) {
 
 function dispatchTextToGame(text) {
     for (const char of text) {
-        dispatchKeyToTargets("keydown", char);
-        dispatchKeyToTargets("keypress", char);
-        dispatchKeyToTargets("keyup", char);
+        dispatchKeyToTargets("keydown", char, { keyCode: legacyKeyCodeForKey(char), which: legacyKeyCodeForKey(char), charCode: 0 });
+        dispatchKeyToTargets("keypress", char, { keyCode: legacyKeyCodeForKey(char), which: legacyKeyCodeForKey(char), charCode: char.charCodeAt(0) });
+        dispatchKeyToTargets("keyup", char, { keyCode: legacyKeyCodeForKey(char), which: legacyKeyCodeForKey(char), charCode: 0 });
     }
 }
 
-function forwardKeyboardEventToGame(event) {
-    if (!document.body.classList.contains("is-playing")) return;
+function updateControlVisibility() {
+    const playing = document.body.classList.contains("is-playing");
+    const showKeyboard = playing && isMobileDevice() && isHtmlGameOpen();
+    const showHome = playing;
 
-    const specialKeys = new Set([
-        "Backspace", "Enter", "Tab", "Escape", "Delete",
-        "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
-        "Home", "End", "PageUp", "PageDown", " "
-    ]);
-
-    if (event.type === "keydown" || event.type === "keyup") {
-        if (event.key.length === 1 && event.key !== " ") return;
-        if (!specialKeys.has(event.key)) return;
-
-        dispatchKeyToTargets(event.type, event.key, event);
-        event.preventDefault();
-        return;
+    topbarRight.style.display = playing ? "flex" : "none";
+    homeButton.style.display = showHome ? "inline-flex" : "none";
+    keyboardButton.style.display = showKeyboard ? "inline-flex" : "none";
+    if (!showKeyboard) {
+        keyboardOpen = false;
+        keyboardProxy.value = "";
     }
 }
 
-function handleKeyboardProxyBeforeInput(event) {
-    if (!document.body.classList.contains("is-playing")) return;
+function openMobileKeyboard() {
+    if (!isMobileDevice() || !isHtmlGameOpen()) return;
 
-    if (event.inputType === "deleteContentBackward") {
-        dispatchKeyToTargets("keydown", "Backspace", event);
-        dispatchKeyToTargets("keyup", "Backspace", event);
-        keyboardProxy.value = "";
-        event.preventDefault();
-        return;
-    }
-
-    if (event.inputType === "insertLineBreak") {
-        dispatchKeyToTargets("keydown", "Enter", event);
-        dispatchKeyToTargets("keyup", "Enter", event);
-        keyboardProxy.value = "";
-        event.preventDefault();
+    keyboardOpen = true;
+    keyboardProxy.value = "";
+    try {
+        keyboardProxy.focus({ preventScroll: true });
+    } catch (err) {
+        keyboardProxy.focus();
     }
 }
 
 function handleKeyboardProxyInput() {
-    if (!document.body.classList.contains("is-playing")) {
+    if (!isHtmlGameOpen()) {
         keyboardProxy.value = "";
         return;
     }
@@ -1078,115 +953,15 @@ function handleKeyboardProxyInput() {
 
     if (keyboardOpen) {
         window.setTimeout(() => {
-            if (!document.body.classList.contains("is-playing") || !keyboardOpen) return;
+            if (!isHtmlGameOpen()) return;
             if (document.activeElement === keyboardProxy) return;
             try {
                 keyboardProxy.focus({ preventScroll: true });
             } catch (err) {
-                try {
-                    keyboardProxy.focus();
-                } catch (err2) {
-                    // ignore
-                }
+                keyboardProxy.focus();
             }
         }, 0);
     }
-}
-
-function openMobileKeyboard() {
-    if (!document.body.classList.contains("is-playing") || !isMobileDevice()) return;
-
-    keyboardProxy.value = "";
-    setKeyboardOpen(true);
-
-    try {
-        keyboardProxy.focus({ preventScroll: true });
-    } catch (err) {
-        keyboardProxy.focus();
-    }
-
-    window.setTimeout(() => {
-        try {
-            keyboardProxy.focus({ preventScroll: true });
-        } catch (err) {
-            keyboardProxy.focus();
-        }
-    }, 0);
-}
-
-function toggleMobileKeyboard() {
-    if (!document.body.classList.contains("is-playing") || !isMobileDevice()) return;
-
-    if (document.activeElement === keyboardProxy || keyboardOpen) {
-        setKeyboardOpen(false);
-        keyboardProxy.blur();
-        keyboardProxy.value = "";
-        focusGameSurface();
-        return;
-    }
-
-    openMobileKeyboard();
-}
-
-function updateFullscreenButtonState() {
-    const fullscreen = isGameFullscreen();
-    fullscreenButton.setAttribute("aria-label", fullscreen ? "Exit fullscreen" : "Toggle fullscreen");
-    fullscreenButton.setAttribute("title", fullscreen ? "Exit fullscreen" : "Fullscreen");
-}
-
-function positionControlButtons() {
-    const host = isGameFullscreen() ? viewerControls : topbarRight;
-    if (fullscreenButton.parentElement !== host) {
-        host.appendChild(fullscreenButton);
-    }
-    if (keyboardButton.parentElement !== host) {
-        host.appendChild(keyboardButton);
-    }
-}
-
-function updateGameViewport() {
-    const keyboardInset = keyboardOpen && isMobileDevice() && document.body.classList.contains("is-playing")
-        ? (() => {
-            const vv = window.visualViewport;
-            if (!vv) return 0;
-            return Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
-        })()
-        : 0;
-
-    viewer.style.bottom = `${keyboardInset}px`;
-
-    if (isGameFullscreen()) {
-        viewer.style.top = "0px";
-    } else {
-        viewer.style.top = "";
-    }
-
-    if (currentMode === "flash") {
-        requestAnimationFrame(() => applyFlashScale());
-    }
-}
-
-function updateControlVisibility() {
-    const playing = document.body.classList.contains("is-playing");
-    const fullscreen = isGameFullscreen();
-    const mobile = isMobileDevice();
-
-    positionControlButtons();
-    updateFullscreenButtonState();
-
-    topbarRight.style.display = playing && !fullscreen ? "flex" : "none";
-    viewerControls.style.display = playing && fullscreen ? "flex" : "none";
-    fullscreenButton.style.display = playing ? "inline-flex" : "none";
-    keyboardButton.style.display = playing && mobile ? "inline-flex" : "none";
-
-    updateGameViewport();
-}
-
-function syncChromeState() {
-    updateTopbarHeight();
-    updateTitleText();
-    updateSearchClearState();
-    updateControlVisibility();
 }
 
 function parseConfig(text) {
@@ -1322,6 +1097,7 @@ function renderGames() {
     filtered.forEach(g => {
         const meta = inputMeta(g.input);
         const mobileFriendly = g.mobile === "yes";
+        const showMobileBadge = mobileFriendly && isMobileDevice();
 
         const card = document.createElement("div");
         card.className = "game-card";
@@ -1332,7 +1108,7 @@ function renderGames() {
                </a>`
             : "";
 
-        const mobileBadgeHTML = mobileFriendly
+        const mobileBadgeHTML = showMobileBadge
             ? `<div class="mobile-badge" title="Mobile friendly">
                    <span aria-hidden="true">${mobilePhoneSVG()}</span>
                    <span>mobile friendly</span>
@@ -1375,22 +1151,8 @@ function isFlashGame(url) {
 }
 
 function clearViewerContent() {
-    frame.src = "about:blank";
-    ruffleContainer.replaceChildren();
-    currentFlashPlayer = null;
-}
-
-function stopGameSession() {
-    keyboardProxy.blur();
-    keyboardProxy.value = "";
-    setKeyboardOpen(false);
-
-    if (flashResizeObserver) {
-        flashResizeObserver.disconnect();
-        flashResizeObserver = null;
-    }
-
-    clearViewerContent();
+    frame.src = "";
+    ruffleContainer.innerHTML = "";
 }
 
 const FLASH_BASE_W = 800;
@@ -1436,7 +1198,6 @@ function openGame(url, title) {
     updateTitleText();
 
     clearViewerContent();
-    syncChromeState();
 
     if (isFlashGame(url) && window.RufflePlayer) {
         currentMode = "flash";
@@ -1454,7 +1215,6 @@ function openGame(url, title) {
 
         ruffleContainer.appendChild(player);
         player.load(url);
-        currentFlashPlayer = player;
 
         setupFlashResizeTracking();
         requestAnimationFrame(() => applyFlashScale());
@@ -1467,35 +1227,17 @@ function openGame(url, title) {
         frame.style.display = "block";
         gameShell.style.transform = "none";
         frame.src = url;
-        requestAnimationFrame(() => {
-            if (!keyboardOpen) focusGameSurface();
-        });
     }
 
-    syncChromeState();
-}
-
-function closeFullscreenMode() {
-    if (document.body.classList.contains("fake-fullscreen")) {
-        document.body.classList.remove("fake-fullscreen");
-        syncChromeState();
-        return;
-    }
-
-    if (document.fullscreenElement === viewer && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-        return;
-    }
-
-    if (document.webkitFullscreenElement === viewer && document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-    }
+    updateTopbarHeight();
+    updateControlVisibility();
 }
 
 function closeGame() {
-    closeFullscreenMode();
-    stopGameSession();
     viewer.style.display = "none";
+    clearViewerContent();
+    keyboardProxy.blur();
+    keyboardProxy.value = "";
 
     frame.style.display = "block";
     ruffleContainer.style.display = "none";
@@ -1510,7 +1252,11 @@ function closeGame() {
     currentMode = "html";
     updateTitleText();
     updateTopbarHeight();
-    syncChromeState();
+    updateControlVisibility();
+    if (flashResizeObserver) {
+        flashResizeObserver.disconnect();
+        flashResizeObserver = null;
+    }
 }
 
 function syncResponsiveState() {
@@ -1518,6 +1264,7 @@ function syncResponsiveState() {
     updateTitleText();
     updateSearchClearState();
     updateTopbarHeight();
+    updateControlVisibility();
 
     if (!isMobileLayout()) {
         closeNav();
@@ -1526,8 +1273,6 @@ function syncResponsiveState() {
     if (viewer.style.display !== "block") {
         document.body.classList.remove("is-playing");
     }
-
-    syncChromeState();
 }
 
 homeButton.addEventListener("click", closeGame);
@@ -1550,85 +1295,18 @@ allCatButton.addEventListener("click", () => {
 });
 window.addEventListener("resize", syncResponsiveState);
 mobileQuery.addEventListener("change", syncResponsiveState);
-mobileDeviceQuery.addEventListener("change", syncChromeState);
-fullscreenButton.addEventListener("click", toggleFullscreenMode);
-keyboardButton.addEventListener("click", toggleMobileKeyboard);
-keyboardProxy.addEventListener("focus", () => setKeyboardOpen(true));
-keyboardProxy.addEventListener("blur", () => {
-    keyboardProxy.value = "";
-    if (!document.body.classList.contains("is-playing")) {
-        setKeyboardOpen(false);
-        return;
-    }
-
-    if (keyboardOpen) {
-        window.setTimeout(() => {
-            if (!document.body.classList.contains("is-playing") || !keyboardOpen) return;
-            if (document.activeElement === keyboardProxy) return;
-            try {
-                keyboardProxy.focus({ preventScroll: true });
-            } catch (err) {
-                try {
-                    keyboardProxy.focus();
-                } catch (err2) {
-                    // ignore
-                }
-            }
-        }, 0);
-        return;
-    }
-
-    setKeyboardOpen(false);
+mobileDeviceQuery.addEventListener("change", () => {
+    renderGames();
+    syncResponsiveState();
 });
-keyboardProxy.addEventListener("beforeinput", handleKeyboardProxyBeforeInput);
+keyboardButton.addEventListener("click", openMobileKeyboard);
+keyboardProxy.addEventListener("focus", () => {
+    keyboardOpen = true;
+});
 keyboardProxy.addEventListener("input", handleKeyboardProxyInput);
-keyboardProxy.addEventListener("keydown", forwardKeyboardEventToGame);
-keyboardProxy.addEventListener("keyup", forwardKeyboardEventToGame);
-
-document.addEventListener("fullscreenchange", syncChromeState);
-document.addEventListener("webkitfullscreenchange", syncChromeState);
-function hardStopGameOnUnload() {
-    try {
-        stopGameSession();
-    } catch (err) {
-        // ignore
-    }
-}
-
-window.addEventListener("pagehide", hardStopGameOnUnload);
-window.addEventListener("beforeunload", hardStopGameOnUnload);
-if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", updateGameViewport);
-    window.visualViewport.addEventListener("scroll", updateGameViewport);
-}
-
-async function toggleFullscreenMode() {
-    if (isGameFullscreen()) {
-        closeFullscreenMode();
-        return;
-    }
-
-    if (viewer.requestFullscreen) {
-        try {
-            await viewer.requestFullscreen();
-            return;
-        } catch (err) {
-            // fallback below
-        }
-    }
-
-    if (viewer.webkitRequestFullscreen) {
-        try {
-            await viewer.webkitRequestFullscreen();
-            return;
-        } catch (err) {
-            // fallback below
-        }
-    }
-
-    document.body.classList.add("fake-fullscreen");
-    syncChromeState();
-}
+keyboardProxy.addEventListener("blur", () => {
+    keyboardOpen = false;
+});
 
 async function loadConfig() {
     try {
@@ -1642,6 +1320,7 @@ async function loadConfig() {
         renderGames();
         updateSearchClearState();
         syncResponsiveState();
+        updateControlVisibility();
     } catch (err) {
         console.error(err);
         grid.innerHTML = `
