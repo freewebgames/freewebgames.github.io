@@ -1031,6 +1031,18 @@ function parseConfig(text) {
         .split(/\n\s*\n/)
         .filter(Boolean);
 
+    const knownKeys = new Set([
+        "title",
+        "url",
+        "img",
+        "desc",
+        "cat",
+        "input",
+        "creator_name",
+        "creator_url",
+        "mobile"
+    ]);
+
     return blocks.map(block => {
         const obj = {};
 
@@ -1038,9 +1050,22 @@ function parseConfig(text) {
             const idx = line.indexOf("|");
             if (idx === -1) return;
 
-            const key = line.slice(0, idx).trim().toLowerCase();
-            const value = line.slice(idx + 1).trim();
-            obj[key] = value;
+            const left = line.slice(0, idx).trim();
+            const right = line.slice(idx + 1).trim();
+            const leftKey = left.toLowerCase();
+            const rightKey = right.toLowerCase();
+
+            if (knownKeys.has(leftKey)) {
+                obj[leftKey] = right;
+                return;
+            }
+
+            if (knownKeys.has(rightKey) && !knownKeys.has(leftKey)) {
+                obj[rightKey] = left;
+                return;
+            }
+
+            obj[leftKey] = right;
         });
 
         obj.cat = (obj.cat || "")
@@ -1175,26 +1200,12 @@ function renderGames() {
             : "";
 
         const inputBadgeHTML = `
-            <div class="input-badge ${hasMobileBadge ? "has-mobile" : ""}"
-                 title="${[
-                    ...badgeIcons,
-                    hasMobileBadge ? "mobile friendly" : ""
-                 ].filter(Boolean).join(", ")}">
+            <div class="input-badge"
+                 title="${badgeIcons.join(", ")}">
 
                 <span class="input-icons" aria-hidden="true">
                     ${badgeIcons.map(i => iconSVG(i)).join("")}
                 </span>
-
-                ${
-                    hasMobileBadge
-                        ? `
-                            <span class="badge-divider" aria-hidden="true">•</span>
-                            <span class="mobile-badge-inline" aria-hidden="true">
-                                ${mobilePhoneSVG()}
-                            </span>
-                        `
-                        : ""
-                }
             </div>
         `;
 
