@@ -418,6 +418,13 @@ body{
     stroke-linejoin:round;
 }
 
+.badge-divider{
+    color:#5f6d7a;
+    font-size:1rem;
+    line-height:1;
+    user-select:none;
+}
+
 .game-desc{
     color:var(--muted);
     font-size:.95rem;
@@ -1200,12 +1207,24 @@ function renderGames() {
             : "";
 
         const inputBadgeHTML = `
-            <div class="input-badge"
-                 title="${badgeIcons.join(", ")}">
-
+            <div class="input-badge ${mobileFriendly ? "has-mobile" : ""}"
+                 title="${[
+                    ...badgeIcons,
+                    mobileFriendly ? "mobile friendly" : ""
+                 ].filter(Boolean).join(", ")}">
                 <span class="input-icons" aria-hidden="true">
                     ${badgeIcons.map(i => iconSVG(i)).join("")}
                 </span>
+                ${
+                    mobileFriendly
+                        ? `
+                            <span class="badge-divider" aria-hidden="true">•</span>
+                            <span class="mobile-badge" title="Mobile friendly" aria-hidden="true">
+                                ${mobilePhoneSVG()}
+                            </span>
+                        `
+                        : ""
+                }
             </div>
         `;
 
