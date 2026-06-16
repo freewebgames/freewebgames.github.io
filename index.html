@@ -1174,8 +1174,6 @@ function renderGames() {
                </a>`
             : "";
 
-        const hasMobileBadge = mobileFriendly;
-
         const inputBadgeHTML = `
             <div class="input-badge ${hasMobileBadge ? "has-mobile" : ""}"
                  title="${[
@@ -1191,9 +1189,8 @@ function renderGames() {
                     hasMobileBadge
                         ? `
                             <span class="badge-divider" aria-hidden="true">•</span>
-                            <span class="mobile-badge-inline" title="Mobile friendly">
-                                <span aria-hidden="true">${mobilePhoneSVG()}</span>
-                                <span class="mobile-text">mobile</span>
+                            <span class="mobile-badge-inline" aria-hidden="true">
+                                ${mobilePhoneSVG()}
                             </span>
                         `
                         : ""
