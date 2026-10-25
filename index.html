@@ -8,12 +8,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="color-scheme" content="dark">
-<link rel="shortcut icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/FWG.png">
 <link rel="icon" type="image/png" href="/FWG.png">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Free Web Games</title>
 
 <script src="Ruffle/ruffle.js"></script>
@@ -191,12 +190,17 @@ body{
 
 .keyboard-proxy{
     position:fixed;
-    left:-9999px;
-    top:0;
+    left:0;
+    bottom:0;
     width:1px;
     height:1px;
+    padding:0;
+    border:0;
+    /* iOS zooms the page when focusing a field with a font-size below 16px. */
+    font-size:16px;
     opacity:0;
     pointer-events:none;
+    z-index:-1;
 }
 
 .mobile-search-row{
@@ -205,7 +209,9 @@ body{
 
 .main{
     display:flex;
+    /* vh fallback for browsers without dvh (iOS Safari 15.4 and older). */
     height:calc(100vh - var(--topbar-h));
+    height:calc(100dvh - var(--topbar-h));
     min-height:0;
 }
 
@@ -503,6 +509,73 @@ body{
     overflow:hidden;
 }
 
+/*
+ * Fullscreen handling.
+ * `is-fullscreen` is applied for both the native Fullscreen API and the CSS
+ * fallback used on iOS, where non-video elements cannot be fullscreened.
+ */
+.viewer.is-fullscreen{
+    inset:0;
+    z-index:200;
+}
+
+/* Keep the native API path filling the viewport even if a UA ignores the class. */
+.viewer:fullscreen{
+    inset:0;
+}
+
+.viewer:-webkit-full-screen{
+    inset:0;
+}
+
+.viewer-exit-fullscreen{
+    display:none;
+    position:absolute;
+    top:calc(10px + env(safe-area-inset-top, 0px));
+    right:calc(10px + env(safe-area-inset-right, 0px));
+    width:42px;
+    height:42px;
+    padding:0;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:8px;
+    background:rgba(0,0,0,.55);
+    color:#fff;
+    cursor:pointer;
+    z-index:10;
+    align-items:center;
+    justify-content:center;
+    line-height:0;
+}
+
+.viewer-exit-fullscreen:hover{
+    background:rgba(0,0,0,.75);
+}
+
+.viewer-exit-fullscreen svg{
+    width:20px;
+    height:20px;
+    display:block;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.viewer.is-fullscreen .viewer-exit-fullscreen{
+    display:flex;
+}
+
+/*
+ * CSS fullscreen fallback (iOS): hide the app chrome entirely so the only
+ * visible control is the exit-fullscreen button inside the viewer.
+ */
+body.pseudo-fullscreen .topbar,
+body.pseudo-fullscreen .sidebar,
+body.pseudo-fullscreen .backdrop{
+    display:none;
+}
+
 /* Shared frame treatment */
 .game-shell{
     border:var(--viewer-border-width) solid var(--viewer-border);
@@ -537,6 +610,8 @@ body{
     top:50%;
     width:800px;
     height:600px;
+    /* The SWF stage is 4:3; never let fullscreen or a UA rule stretch it. */
+    aspect-ratio:4 / 3;
     transform:translate(-50%, -50%) scale(1);
 }
 
@@ -746,9 +821,15 @@ body.is-playing .mobile-search-row{
 
 <div class="viewer" id="viewer">
     <div id="gameShell" class="game-shell html-shell">
-        <iframe id="gameFrame" title="Game frame"></iframe>
+        <iframe id="gameFrame" title="Game frame" allow="fullscreen; autoplay; gamepad" allowfullscreen></iframe>
         <div id="ruffleContainer"></div>
     </div>
+    <button class="viewer-exit-fullscreen" id="viewerExitButton" type="button" aria-label="Exit fullscreen" title="Exit fullscreen">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6L6 18"></path>
+        </svg>
+    </button>
 </div>
 
 <textarea id="keyboardProxy" class="keyboard-proxy" aria-hidden="true" tabindex="-1" autocomplete="off" autocapitalize="none" spellcheck="false"></textarea>
@@ -771,6 +852,7 @@ const logoText = document.getElementById("logoText");
 const homeButton = document.getElementById("homeButton");
 const keyboardButton = document.getElementById("keyboardButton");
 const fullscreenButton = document.getElementById("fullscreenButton");
+const viewerExitButton = document.getElementById("viewerExitButton");
 const keyboardProxy = document.getElementById("keyboardProxy");
 const topbarRight = document.getElementById("topbarRight");
 const allCatButton = document.querySelector('.cat[data-cat="all"]');
@@ -783,6 +865,8 @@ const mobileDeviceQuery = window.matchMedia("(pointer: coarse) and (hover: none)
 
 let currentMode = "html";
 let keyboardOpen = false;
+let pseudoFullscreen = false;
+let fullscreenRequestId = 0;
 
 function isMobileLayout() {
     return mobileQuery.matches;
@@ -842,42 +926,107 @@ function isMobileDevice() {
 }
 
 function getFullscreenElement() {
-    return document.fullscreenElement || document.webkitFullscreenElement || null;
+    return document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.webkitCurrentFullScreenElement ||
+        null;
 }
 
 function getFullscreenTarget() {
-    return gameShell;
+    // Fullscreen the viewer rather than the game shell: the shell is sized and
+    // transformed relative to the viewer, so fullscreening it leaves it at the
+    // old size/offset (and breaks Flash scaling) on browsers that honour it.
+    return viewer;
+}
+
+function isFullscreenActive() {
+    return pseudoFullscreen || !!getFullscreenElement();
 }
 
 function updateFullscreenButtonState() {
     if (!fullscreenButton) return;
 
-    const isFullscreen = getFullscreenElement() === getFullscreenTarget();
+    const isFullscreen = isFullscreenActive();
+    viewer.classList.toggle("is-fullscreen", isFullscreen);
+
     fullscreenButton.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Fullscreen");
     fullscreenButton.title = isFullscreen ? "Exit fullscreen" : "Fullscreen";
+}
+
+function setPseudoFullscreen(active) {
+    pseudoFullscreen = active;
+    // Hide the app chrome; only the exit button inside the viewer remains.
+    document.body.classList.toggle("pseudo-fullscreen", active);
+    updateFullscreenButtonState();
+    requestAnimationFrame(() => applyFlashScale());
+}
+
+function enterPseudoFullscreen() {
+    setPseudoFullscreen(true);
+}
+
+async function exitFullscreenMode() {
+    fullscreenRequestId++;
+
+    if (pseudoFullscreen) {
+        setPseudoFullscreen(false);
+        return;
+    }
+
+    try {
+        if (document.exitFullscreen) {
+            await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            await document.webkitExitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }
+    } catch (err) {
+        // ignore
+    }
+
+    updateFullscreenButtonState();
+    requestAnimationFrame(() => applyFlashScale());
 }
 
 async function toggleFullscreen() {
     const target = getFullscreenTarget();
     if (!target) return;
 
-    try {
-        if (getFullscreenElement()) {
-            if (document.exitFullscreen) {
-                await document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                await document.webkitExitFullscreen();
-            }
-            return;
-        }
+    if (isFullscreenActive()) {
+        await exitFullscreenMode();
+        return;
+    }
 
-        if (target.requestFullscreen) {
-            await target.requestFullscreen();
-        } else if (target.webkitRequestFullscreen) {
-            await target.webkitRequestFullscreen();
+    const requestId = ++fullscreenRequestId;
+    const request = target.requestFullscreen || target.webkitRequestFullscreen;
+
+    if (request) {
+        try {
+            const result = request.call(target);
+            if (result && typeof result.then === "function") {
+                await result;
+            }
+
+            updateFullscreenButtonState();
+            requestAnimationFrame(() => applyFlashScale());
+
+            // iOS Safari exposes the prefixed API but refuses to fullscreen
+            // anything other than <video>. If nothing happened, use CSS.
+            window.setTimeout(() => {
+                if (requestId !== fullscreenRequestId) return;
+                if (!getFullscreenElement() && !pseudoFullscreen) {
+                    enterPseudoFullscreen();
+                }
+            }, 250);
+            return;
+        } catch (err) {
+            // Fall through to the CSS fallback.
         }
-    } catch (err) {
-        console.error(err);
+    }
+
+    if (requestId === fullscreenRequestId) {
+        enterPseudoFullscreen();
     }
 }
 
@@ -955,6 +1104,12 @@ function getKeyboardTargets() {
 }
 
 function dispatchKeyToTargets(type, key, sourceEvent = {}) {
+    const keyCode = sourceEvent.keyCode || legacyKeyCodeForKey(key);
+    const charCode = type === "keypress"
+        ? (sourceEvent.charCode || (key.length === 1 ? key.charCodeAt(0) : 0))
+        : 0;
+    const which = sourceEvent.which || (type === "keypress" ? charCode : keyCode);
+
     const eventInit = {
         key,
         code: sourceEvent.code || codeForKey(key),
@@ -966,16 +1121,22 @@ function dispatchKeyToTargets(type, key, sourceEvent = {}) {
         repeat: !!sourceEvent.repeat,
         bubbles: true,
         cancelable: true,
-        composed: true,
-        keyCode: sourceEvent.keyCode || legacyKeyCodeForKey(key),
-        charCode: sourceEvent.charCode || (type === "keypress" && key.length === 1 ? key.charCodeAt(0) : 0),
-        which: sourceEvent.which || legacyKeyCodeForKey(key)
+        composed: true
     };
 
     const targets = getKeyboardTargets();
     for (const target of targets) {
         try {
             const event = new KeyboardEvent(type, eventInit);
+
+            // The KeyboardEvent constructor ignores keyCode/which/charCode,
+            // but many games still read those legacy properties.
+            Object.defineProperties(event, {
+                keyCode: { get: () => keyCode, configurable: true },
+                which: { get: () => which, configurable: true },
+                charCode: { get: () => charCode, configurable: true }
+            });
+
             target.dispatchEvent(event);
         } catch (err) {
             // ignore
@@ -985,9 +1146,9 @@ function dispatchKeyToTargets(type, key, sourceEvent = {}) {
 
 function dispatchTextToGame(text) {
     for (const char of text) {
-        dispatchKeyToTargets("keydown", char, { keyCode: legacyKeyCodeForKey(char), which: legacyKeyCodeForKey(char), charCode: 0 });
-        dispatchKeyToTargets("keypress", char, { keyCode: legacyKeyCodeForKey(char), which: legacyKeyCodeForKey(char), charCode: char.charCodeAt(0) });
-        dispatchKeyToTargets("keyup", char, { keyCode: legacyKeyCodeForKey(char), which: legacyKeyCodeForKey(char), charCode: 0 });
+        dispatchKeyToTargets("keydown", char);
+        dispatchKeyToTargets("keypress", char);
+        dispatchKeyToTargets("keyup", char);
     }
 }
 
@@ -1045,6 +1206,32 @@ function handleKeyboardProxyInput() {
     }
 }
 
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[ch]));
+}
+
+function sanitizeUrl(value) {
+    const url = String(value ?? "").trim();
+    if (!url) return "";
+
+    try {
+        const parsed = new URL(url, window.location.href);
+        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+            return url;
+        }
+    } catch (err) {
+        // Not a valid URL.
+    }
+
+    return "";
+}
+
 function parseConfig(text) {
     const blocks = text
         .trim()
@@ -1097,6 +1284,10 @@ function parseConfig(text) {
         obj.creator_name = (obj.creator_name || "").trim();
         obj.creator_url = (obj.creator_url || "").trim();
         obj.mobile = (obj.mobile || "").trim().toLowerCase();
+
+        obj.url = sanitizeUrl(obj.url);
+        obj.img = sanitizeUrl(obj.img);
+        obj.creator_url = sanitizeUrl(obj.creator_url);
 
         return obj;
     }).filter(g => g.title && g.url);
@@ -1159,9 +1350,9 @@ function gameMatchesSearch(game, term) {
 }
 
 function setActiveCategory(category) {
-    document.querySelectorAll(".cat").forEach(el => el.classList.remove("active"));
-    const active = document.querySelector(`.cat[data-cat="${category}"]`);
-    if (active) active.classList.add("active");
+    document.querySelectorAll(".cat").forEach(el => {
+        el.classList.toggle("active", el.dataset.cat === category);
+    });
 }
 
 function renderCategories() {
@@ -1213,9 +1404,13 @@ function renderGames() {
         const card = document.createElement("div");
         card.className = "game-card";
 
+        const title = escapeHtml(g.title || "");
+        const desc = escapeHtml(g.desc || "");
+        const imageUrl = escapeHtml(g.img || "");
+
         const supportButtonHTML = g.creator_url
-            ? `<a class="support-button" href="${g.creator_url}" target="_blank" rel="noopener noreferrer">
-                   Support ${g.creator_name ? g.creator_name : "Creator"}
+            ? `<a class="support-button" href="${escapeHtml(g.creator_url)}" target="_blank" rel="noopener noreferrer">
+                   Support ${escapeHtml(g.creator_name || "Creator")}
                </a>`
             : "";
 
@@ -1242,17 +1437,17 @@ function renderGames() {
         `;
 
         card.innerHTML = `
-            <img class="game-image" src="${g.img || ""}" alt="${g.title || ""}">
+            <img class="game-image" src="${imageUrl}" alt="${title}">
             <div class="game-info">
                 <div class="game-toprow">
-                    <div class="game-title">${g.title || ""}</div>
+                    <div class="game-title">${title}</div>
 
                     <div class="badge-stack">
                         ${inputBadgeHTML}
                     </div>
                 </div>
 
-                <div class="game-desc">${g.desc || ""}</div>
+                <div class="game-desc">${desc}</div>
 
                 <div class="action-row">
                     <button class="play-button" type="button">Play</button>
@@ -1274,7 +1469,9 @@ function isFlashGame(url) {
 }
 
 function clearViewerContent() {
-    frame.src = "";
+    // Setting src to "" navigates the iframe to the current page URL, which
+    // reloads the whole library inside the frame. about:blank is what we want.
+    frame.src = "about:blank";
     ruffleContainer.innerHTML = "";
 }
 
@@ -1357,16 +1554,8 @@ function openGame(url, title) {
 }
 
 async function closeGame() {
-    if (getFullscreenElement()) {
-        try {
-            if (document.exitFullscreen) {
-                await document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                await document.webkitExitFullscreen();
-            }
-        } catch (err) {
-            // ignore
-        }
+    if (isFullscreenActive()) {
+        await exitFullscreenMode();
     }
 
     viewer.style.display = "none";
@@ -1427,6 +1616,7 @@ allCatButton.addEventListener("click", () => {
     currentCategory = "all";
     setActiveCategory("all");
     renderGames();
+    if (isMobileLayout()) closeNav();
 });
 window.addEventListener("resize", syncResponsiveState);
 mobileQuery.addEventListener("change", syncResponsiveState);
@@ -1434,9 +1624,24 @@ mobileDeviceQuery.addEventListener("change", () => {
     renderGames();
     syncResponsiveState();
 });
-document.addEventListener("fullscreenchange", updateFullscreenButtonState);
-document.addEventListener("webkitfullscreenchange", updateFullscreenButtonState);
+function handleFullscreenChange() {
+    // Cancel any pending "did the request work?" fallback check; the browser
+    // has just told us the real state.
+    fullscreenRequestId++;
+    updateFullscreenButtonState();
+    requestAnimationFrame(() => applyFlashScale());
+}
+
+document.addEventListener("fullscreenchange", handleFullscreenChange);
+document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 fullscreenButton.addEventListener("click", toggleFullscreen);
+viewerExitButton.addEventListener("click", exitFullscreenMode);
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && pseudoFullscreen) {
+        event.preventDefault();
+        setPseudoFullscreen(false);
+    }
+});
 keyboardButton.addEventListener("click", openMobileKeyboard);
 keyboardProxy.addEventListener("focus", () => {
     keyboardOpen = true;
